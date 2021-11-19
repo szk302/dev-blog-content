@@ -1,0 +1,28 @@
+---
+title: Blogに使用するThemeを決める
+date: 2021-11-14T00:00:00+09:00
+draft: false
+categories:
+  - OSS
+  - Hugo
+tags:
+  - Hugo
+  - Awesome Open Source
+---
+
+= Blogに使用するThemeを決める
+
+https://awesomeopensource.com/projects/hugo-theme[Awesome Open Source/hugo-theme]などからThemeを探してみた。
+
+スター数やシンプルなブログを考慮すると以下のThemeが残った。
+
+* https://awesomeopensource.com/project/adityatelange/hugo-PaperMod[Hugo Papermod]
+* https://awesomeopensource.com/project/dillonzq/LoveIt[Loveit]
+
+fuseを使用してみたかったのでPapermodに決定
+
+== 参考
+
+* https://awesomeopensource.com/projects/hugo-theme[Awesome Open Source/hugo-theme]
+* https://awesomeopensource.com/project/adityatelange/hugo-PaperMod[Hugo Papermod]
+* https://awesomeopensource.com/project/dillonzq/LoveIt[Loveit]

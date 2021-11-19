@@ -1,0 +1,54 @@
+---
+title: react-app-rewiredでwebpack-bundle-analyzerを使用する
+date: 2021-11-17T00:00:00+00:00
+draft: false
+categories:
+  - Development
+tags:
+  - webpack
+  - React
+  - react-ap-rewired 
+  - webpack-bundle-analyzer
+---
+
+= react-app-rewiredでwebpack-bundle-analyzerを使用する
+
+react-app-rewiredで作られたプロジェクトでwebpack-bundle-analyzerを使用したかったので調査
+
+== 環境
+
+* react: 17.0.1
+* webpack: 4.44.2
+* react-app-rewired: 2.1.8
+
+== 方法
+
+https://github.com/byzyk/react-app-rewire-webpack-bundle-analyzer[byzyk/react-app-rewire-webpack-bundle-analyzer] を使用する
+
+. インストール
+** `yarn add --dev react-app-rewire-webpack-bundle-analyzer`
+. config-overrides.jsに以下のように記述
++
+[source,js]
+----
+const rewireWebpackBundleAnalyzer = require('react-app-rewire-webpack-bundle-analyzer')
+
+module.exports = function override(config, env) {
+  // ...
+
+  if (env === 'production') {
+    config = rewireWebpackBundleAnalyzer(config, env, {
+      analyzerMode: 'static',
+      reportFilename: 'report.html'
+    })
+  }
+
+  return config
+}
+----
+. `yarn build` でビルド終了後、ブラウザが立ち上がり結果が表示される
+
+== 参考
+
+* https://github.com/byzyk/react-app-rewire-webpack-bundle-analyzer[byzyk/react-app-rewire-webpack-bundle-analyzer]
+

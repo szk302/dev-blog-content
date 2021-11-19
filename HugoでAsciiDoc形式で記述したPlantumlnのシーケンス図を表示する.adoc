@@ -1,0 +1,57 @@
+---
+title: "HugoでAsciiDocファイルに記述したPlantUMLのシーケンス図を表示する"
+date: 2021-11-17T00:27:20+09:00
+draft: false
+categories:
+  - OSS
+tags:
+  - Hugo
+  - PlantUML
+  - AsciiDoc
+  - Asciidoctor
+---
+
+= HugoでAsciiDocファイルに記述したPlantUMLのシーケンス図を表示する
+
+以下のプルリクでPlantUMLが表示できるようになったようだ
+
+* https://github.com/gohugoio/hugo/pull/7281[rework external asciidoc integration #7281]
+
+== 対応
+
+Gem経由でインストールしたAsciidocが対象とのことなので、ベースイメージを `asciidoctor/docker-asciidoctor` に変更し、
+必要なモジュールを追加する。
+
+. Hugoを動かしているDockerファイルにモジュールを追加
++
+[source,docker]
+----
+RUN apk add --no-cache ruby-dev alpine-sdk graphviz
+RUN gem install bundler json asciidoctor-html5s asciidoctor-diagram
+----
+. config.ymlに以下のように設定を追加
+
+[source,yml]
+----
+markup:
+  asciidocext:
+    extensions:
+      - asciidoctor-html5s
+      - asciidoctor-diagram
+    workingFolderCurrent: true
+    trace: true
+    attributes:
+      my-base-url: 'https://localhost/'
+      my-attribute-name: my value
+----
+
+
+== 確認
+
+. hugo --destination 出力先ディレクトリ
+
+== 参考
+
+* https://github.com/gohugoio/hugo/pull/7281[rework external asciidoc integration #7281]
+
+

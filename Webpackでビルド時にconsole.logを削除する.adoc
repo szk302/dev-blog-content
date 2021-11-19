@@ -1,0 +1,71 @@
+---
+title: Webpackでビルド時にconsole.logを削除する
+date: 2021-11-17T00:00:00+00:00
+draft: false
+categories:
+  - Development
+tags:
+  - webpack
+  - terser
+  - React
+---
+
+= Webpackでビルド時にconsole.logを削除する
+
+Reactで書いたコードに含まれているconsole.logをwebpackのビルド時に消したいという要望があったので調査
+
+== 環境
+
+react:: 17.0.1
+webpack:: 4.44.2
+terser-webpack-plugin:: 4.2.3
+
+== 設定
+
+=== console.* 系すべてを消す場合
+
+terserOptionsのcompressに `drop_console=true` を設定する
+
+[source,js]
+----
+{
+  terserOptions:{
+    cache: true,
+    parallel: true,
+    sourceMap: false,
+    compress:{
+      drop_console: true,          
+    }           
+  }
+}
+----
+
+=== console.log,infoだけ消す場合
+
+terserOptionsのcompressに `pure_funcs=['console.log','console.info']` を設定する
+
+[source,js]
+----
+{
+  terserOptions:{
+    cache: true,
+    parallel: true,
+    sourceMap: false,
+    compress:{
+      pure_funcs: [
+        'console.log',
+        'console.info'
+      ]         
+    }           
+  }
+}
+----
+
+
+
+
+== 参考
+
+* https://stackoverflow.com/questions/54561070/remove-console-log-with-terserwebpackplugin[Remove console.log with TerserWebpackPlugin]
+* https://github.com/terser/terser[terser/terser]
+* https://webpack.js.org/plugins/terser-webpack-plugin/[webpack/TerserWebpackPlugin]

@@ -1,0 +1,30 @@
+---
+title: Gravatarに登録したプロフィール画像のURLを取得する
+date: 2021-11-17T00:27:20+09:00
+draft: false
+categories:
+  - Service
+  - Gravatar
+tags:
+  - Gravatar
+---
+
+= Gravatarに登録したプロフィール画像のURLを取得する
+
+Gravatarに登録したプロフィール画像のURL取得方法を調査した。
+
+MD5のハッシュ値(小文字)に変換して `https://www.gravatar.com/avatar/` につなげることでプロフィール画像のURLになる
+
+以下、Powershellのスクリプト
+
+[source,ps1]
+----
+$email = "メールアドレス"
+$stream = [IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($email.Trim().ToLower()))
+$hash = (Get-FileHash -InputStream $stream -Algorithm MD5).Hash.toLower()
+echo "https://www.gravatar.com/avatar/$hash"
+----
+
+== 参考
+
+* https://ja.gravatar.com/site/implement/hash/[Gravatar/Creating the Hash]

@@ -1,0 +1,72 @@
+---
+title: Webpackでビルド時にSplitChunksPluginでファイル分割を行う
+date: 2021-11-17T00:00:00+00:00
+draft: false
+categories:
+  - Development
+tags:
+  - webpack
+  - terser
+  - React
+---
+
+= Webpackでビルド時にSplitChunksPluginでファイル分割を行う
+
+Webpackでビルド時に生成されるファイルを300kb以下に抑えたいという要望があったので調査
+
+== 環境
+
+react:: 17.0.1
+webpack:: 4.44.2
+terser-webpack-plugin:: 4.2.3
+
+== 設定
+
+以下のパラメータ設定をしたところ、ファイル数とファイルサイズが要望通りに収まった
+
+* minSize: 100000,
+* maxSize: 300000,
+* maxInitialRequests: 10,
+
+[source,js]
+----
+{
+  optimization: {
+    splitChunks: {
+      chunks: 'initial',
+      minSize: 100000,
+      maxSize: 300000,
+      maxInitialRequests: 10,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          reuseExistingChunk: true,
+          name(module,chunks,cacheGroupKey) {
+            const allChunksHashes = chunks.map((item)=>item.hash).join('~');
+            return `${cacheGroupKey}${allChunksHashes}`
+          }
+        },
+      },
+    },
+  },
+}
+----
+
+ファイルは以下のようなファイル名で出力された。
+
+* main~ハッシュ値1.chunk.js
+* main~ハッシュ値1.chunk.js.map
+* main~ハッシュ値2.chunk.js
+* main~ハッシュ値2.chunk.js.map
+* runtime-main.ハッシュ値.js
+* runtime-main.ハッシュ値.js.map
+* vendor~ハッシュ値1.js
+* vendor~ハッシュ値1.js.map
+* vendor~ハッシュ値2.js
+* vendor~ハッシュ値2.js.map
+
+
+== 参考
+
+* https://webpack.js.org/plugins/split-chunks-plugin/[webpack/SplitChunksPlugin]
+* 

@@ -1,0 +1,24 @@
+---
+title: Gravatarに登録したプロフィール画像のサイズを指定する
+date: 2021-11-17T00:27:20+09:00
+draft: false
+categories:
+  - Service
+  - Gravatar
+tags:
+  - Gravatar
+---
+
+= Gravatarに登録したプロフィール画像のサイズを指定する
+
+URLの最後に *?s=ピルクセル数* をつける
+
+100px(https://www.gravatar.com/avatar/d9669165d1baf624cedab4afc3dfcc42?s=100)::
+image:https://www.gravatar.com/avatar/d9669165d1baf624cedab4afc3dfcc42?s=100[]
+
+200px(https://www.gravatar.com/avatar/d9669165d1baf624cedab4afc3dfcc42?s=200)::
+image:https://www.gravatar.com/avatar/d9669165d1baf624cedab4afc3dfcc42?s=200[]
+
+== 参考
+
+* https://ja.gravatar.com/site/implement/images/[Gravatar/Image Requests]
