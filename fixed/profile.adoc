@@ -1,0 +1,28 @@
+---
+title: "プロフィール"
+date: 2021-11-14T00:27:20+09:00
+draft: false
+isCJKLanguage: true
+categories:
+    - hugo
+tags:
+    - hello
+    - world
+hidemeta: false
+comments: false
+description: "Desc Text."
+canonicalURL: "https://canonical.url/to/page"
+disableHLJS: true # to disable highlightjs
+disableShare: false
+disableHLJS: false
+hideSummary: false
+searchHidden: false
+ShowReadingTime: true
+ShowBreadCrumbs: true
+ShowPostNavLinks: true
+---
+
+= プロフィール
+
+工事中
+
