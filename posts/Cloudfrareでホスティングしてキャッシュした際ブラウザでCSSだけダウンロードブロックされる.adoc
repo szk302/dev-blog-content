@@ -1,0 +1,37 @@
+---
+title: Cloudfrareでホスティングしてキャッシュした際ブラウザでCSSだけダウンロードブロックされる
+date: 2021-11-22T07:46:00+09:00
+draft: false
+categories:
+  - Service
+  - Cloudfrare
+tags:
+  - Cloudfrare
+---
+
+= Cloudfrareでホスティングしてキャッシュした際ブラウザでCSSだけダウンロードブロックされる
+
+Cloudfrareでこのブログをホスティングしたところ、cssファイルのダウンロードがされず画面が崩れた。 
+
+== 対応
+
+Webサイトの設定からキャッシュをパージする。
+
+. Webサイトの設定画面を表示
+. [キャッシュをパージ]をクリック
+. [すべてパージ]をクリック
+
+== 確認
+
+* 自分のブラウザのキャッシュを消して再表示
+
+== 発生したブラウザのコンソールのエラー
+
+[source,txt]
+----
+Failed to find a valid digest in the 'integrity' attribute for resource 'https://szk302.dev/assets/css/stylesheet.min.61dfb3f0b4cda95d2ccb867f9a3b244ce5d23e12492bcc3c277df594c7bc1adf.css' with computed SHA-256 integrity 'QGnSnhEdLT7Y+NlgDiW6AvlhSlFVwPYr2z3i9eimKWU='. The resource has been blocked.
+----
+
+== 参考
+
+* https://github.com/lxndrblz/anatole/issues/114#issuecomment-828750909[Failed to find a valid digest in the integrity attribute #114]
