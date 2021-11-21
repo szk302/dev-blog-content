@@ -1,0 +1,21 @@
+name: Update Szk302 dev blog
+on:
+  workflow_dispatch: 
+    inputs:
+      hugo_version:
+        description: 'Hugo version'
+        default: '0.80.0'
+        required: false
+      asciidoctor_version:
+        description: 'Hugo version'
+        default: '1.14.0'
+        required: false
+jobs:
+  build_dev_blog:
+    uses: "szk302/dev-blog-builder/.github/workflows/build.yml@main"
+    with:
+      hugo_version: ${{ github.event.inputs.hugo_version }}
+      asciidoctor_version: ${{ github.event.inputs.asciidoctor_version }}
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }}
+      GR_PAT: ${{ secrets.GR_PAT }}
