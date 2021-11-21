@@ -1,0 +1,26 @@
+---
+title: Gitで差分がある場合だけコミットする
+date: 2021-11-21T20:24:00+09:00
+draft: false
+categories:
+  - OSS
+  - Git
+tags:
+  - Git
+---
+
+= Gitで差分がある場合だけコミットする
+
+自動コミットを作成した際に、差分がない場合にコミットすると終了コードが1になり失敗する
++
+差分がある場合にだけCommitするようにしたい。
+
+[source,bash]
+----
+git add -A
+git diff-index --quiet HEAD || git commit -m 'Auto commit'
+----
+
+== 参考
+
+* https://stackoverflow.com/questions/8123674/how-to-git-commit-nothing-without-an-error[stackoverflow/How to git commit nothing without an error?]

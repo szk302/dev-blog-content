@@ -1,0 +1,13 @@
+{
+  "name": "work",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "editor.tabSize": 2
+  },
+  "extensions": [
+    "asciidoctor.asciidoctor-vscode"
+  ],
+  "shutdownAction": "stopCompose"
+}
