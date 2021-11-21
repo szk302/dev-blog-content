@@ -1,0 +1,12 @@
+
+
+= GitHubのPackagesアクセス用PATのアクセス許可をpackagesのみに制限する
+
+設定画面(https://github.com/settings/tokens[Settings/Developer settings/Personal access tokens])からGithubPackages用のPATを作成しようとすると、 `repo` のスコープのアクセス許可が追加されてしまう。 +
+以下のアドレスからアクセスすることで、`packages`のスコープのみ追加できる
+
+* https://github.com/settings/tokens/new?scopes=write:packages[https://github.com/settings/tokens/new?scopes=write:packages]
+
+== 参考
+
+* https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token[個人アクセストークンを使用する]
