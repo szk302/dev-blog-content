@@ -1,0 +1,30 @@
+---
+title: CloudflareのWebサイト設定でcacheを無効にする
+date: 2021-11-22T22:37:00+09:00
+draft: false
+categories:
+  - Service
+  - Cloudflare
+tags:
+  - Cloudflare
+---
+
+= CloudflareのWebサイト設定でcacheを無効にする
+
+CloudflarePagesにはデフォルトでcacheが組み込まれているらしい。 +
+Webサイト側のcacheはいらないようなのでRuleで無効化した。(※ルール以外で無効化する方法がわからなかった)
+
+== 手順
+
+. Webサイトの画面を表示しルールのページルールから[ページルールを作成]をクリック
+** image:./2021-11-22_22h42_16.png[]
+. 以下の項目を設定
+** URLが一致する場合: \*.szk302.dev/*
+** その後の設定は: キャッシュレベル スキップ 
+** image:./2021-11-22_22h44_15.png[]
+. [保存]ボタンを押下
+
+== 参考
+
+* https://developers.cloudflare.com/pages/platform/serving-pages#caching-and-performance[Caching and performance]
+* https://community.cloudflare.com/t/disable-cloudflare-caching-completly/86417[Disable Cloudflare caching completly]
