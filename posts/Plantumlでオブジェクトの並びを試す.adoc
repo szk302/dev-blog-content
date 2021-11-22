@@ -1,0 +1,148 @@
+---
+title: Plantumlでオブジェクトの並びを試す
+date: 2021-11-22T08:50:00+09:00
+draft: false
+categories:
+  - Service
+  - Cloudfrare
+tags:
+  - Cloudfrare
+---
+
+= Plantumlでオブジェクトの並びを試す
+
+== plantumlの配置
+
+=== -と--について
+
+*-* の数で階層が変わる
+
+デフォルト設定では下方向に階層が広がる
+
+NOTE: 分かりやすいようアルファベットの隣に階層の番号をつけた
+
+[source,plantuml]
+----
+@startuml
+A1 - B1
+A1 -- C2
+A1 -- D2
+C2 - E2
+@enduml
+----
+
+[plantuml]
+----
+@startuml
+A1 - B1
+A1 -- C2
+A1 -- D2
+C2 - E2
+@enduml
+----
+
+==== 階層の条件
+
+* 指定された最長の階層が優先される
+
+同じオブジェクトに対して別々の階層で指定してみる
+
+[source,plantuml]
+----
+@startuml
+A1 -- C2
+C2 -- D3
+A1 - D3
+@enduml
+----
+
+[plantuml]
+----
+@startuml
+A1 -- C2
+C2 -- D3
+A1 - D3
+@enduml
+----
+
+A1と同じ階層にD3を指定したがC2の下の階層になった
+
+今度はA1からD3を2階層下に指定
+
+[source,plantuml]
+----
+@startuml
+A1 -- C2
+C2 - D3
+A1 --- D3
+@enduml
+----
+
+[plantuml]
+----
+@startuml
+A1 -- C2
+C2 - D3
+A1 --- D3
+@enduml
+----
+
+D3は指定どおり2階層下に配置された。
+
+==== 表示位置の指定
+
+同じ階層に置いたオブジェクトは記述した下から順に並んだ
+
+[source,plantuml]
+----
+@startuml
+A1 - B1
+A1 - C1
+A1 - D1
+@enduml
+----
+
+[plantuml]
+----
+@startuml
+A1 - B1
+A1 - C1
+A1 - D1
+@enduml
+----
+
+表示位置を指定する
+
+[plantuml,plantuml]
+----
+@startuml
+A1 -- C2
+C2 -- B3
+A1 -up- B3
+@enduml
+----
+
+[source,plantuml]
+----
+@startuml
+A1 -- C2
+C2 -- B3
+A1 -up- B3
+@enduml
+----
+
+表示位置指定のほうが強い
+
+[plantuml,plantuml]
+----
+@startuml
+left to right direction
+client --[hidden] az_a
+client -- api
+client --[hidden] az_b
+
+az_a -- dynamo
+az_b -- dynamo
+@enduml
+----
+
