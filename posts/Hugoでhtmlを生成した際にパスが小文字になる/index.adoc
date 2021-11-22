@@ -1,0 +1,20 @@
+---
+title: Hugoでhtmlを生成した際にパスが小文字になる
+date: 2021-11-22T23:26:00+09:00
+draft: false
+categories:
+  - OSS
+  - Hugo
+tags:
+  - Hugo
+---
+
+= Hugoでhtmlを生成した際にパスが小文字になる
+
+Hugoでhtmlを生成した際に大文字のファイル名で生成したところ、パスが小文字となり画像が表示されない問題が発生 + 
+config.ymlにオプション `disablePathToLower` を指定することで大文字のままhtmlを出力できた。
+
+== 参考
+
+* https://gohugo.io/getting-started/configuration/#disablepathtolower[Configure Hugo/disablePathToLower]
+* https://github.com/gohugoio/hugo/issues/557[Url is downcased #557]
