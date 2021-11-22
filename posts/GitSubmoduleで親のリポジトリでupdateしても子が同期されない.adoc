@@ -1,0 +1,29 @@
+---
+title: GitSubmoduleで親のリポジトリでupdateしても子が同期されない
+date: 2021-11-22T08:50:00+09:00
+draft: false
+categories:
+  - Service
+  - Cloudfrare
+tags:
+  - Cloudfrare
+---
+
+= GitSubmoduleで親のリポジトリでupdateしても子が同期されない
+
+`git submodule update` してもsubmoduleがupdateがされない。
+
+最初に行ったsubmoduleの追加方法が悪いようだった。
+
+== 対応
+
+. 以下のようにブランチを指定して追加
++
+[source,console]
+----
+git submodule add -b ブランチ名 リポジトリアドレス パス
+----
+. 親リポジトリで `git submodule update --remote` コマンドでsubmoduleのリポジトリを最新化
+
+
+

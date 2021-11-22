@@ -1,0 +1,41 @@
+---
+title: Gitメモ
+date: 2021-11-22T23:36:00+09:00
+draft: false
+categories:
+  - OSS
+  - Git
+tags:
+  - Git
+---
+
+= Gitメモ
+
+== GitSubmoduleを削除
+
+contentをsubmoduleとして登録してあり削除する。
+
+.Console
+[source,console]
+----
+szk@X1:~/szk302/dev-blog-builder$ tree -L 1
+.
+├── archetypes
+├── config.yml
+├── content // submodule
+├── environment
+├── layouts
+├── public
+├── resources
+├── themes
+└── tool_version.env
+7 directories, 2 files
+----
+
+.Console
+[source,console]
+----
+git submodule deinit -f content
+git rm -f content
+rm -rf .git/modules/content
+----
