@@ -1,0 +1,24 @@
+---
+title: "リンクメモ"
+date: 2021-11-24T08:54:00+09:00
+draft: false
+isCJKLanguage: true
+categories:
+    - link
+tags:
+    - GitHub
+---
+
+= リンクメモ
+
+忘れやすいので以下の条件のリンクをここに貼り付ける
+
+* 公式サイトであること
+* リンクに記載されている内容通りの作業
+
+== Service
+
+=== GitHub
+
+* https://docs.github.com/ja/actions/managing-workflow-runs/downloading-workflow-artifacts[ワークフローの成果物をダウンロードする]
+
