@@ -3,10 +3,9 @@ title: GitSubmoduleで親のリポジトリでupdateしても子が同期され�
 date: 2021-11-22T08:50:00+09:00
 draft: false
 categories:
-  - Service
-  - Cloudfrare
+  - OSS
 tags:
-  - Cloudfrare
+  - Git
 ---
 
 = GitSubmoduleで親のリポジトリでupdateしても子が同期されない

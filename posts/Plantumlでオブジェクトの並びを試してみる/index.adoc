@@ -1,17 +1,16 @@
 ---
-title: Plantumlでオブジェクトの並びを試してみる
+title: PlantUMLでオブジェクトの並びを試してみる
 date: 2021-11-22T08:50:00+09:00
 draft: false
 categories:
-  - Service
-  - Cloudfrare
+  - OSS
 tags:
-  - Cloudfrare
+  - PlantUML
 ---
 
-= Plantumlでオブジェクトの並びを試す
+= PlantUMLでオブジェクトの並びを試す
 
-== plantumlの配置
+== PlantUMLの配置
 
 === -と--について
 
