@@ -1,0 +1,37 @@
+---
+title: WSL2上でpushするとGitの認証が毎回走る
+date: 2021-11-24T05:28:00+09:00
+draft: false
+categories:
+  - OSS
+tags:
+  - Git
+  - WSL2
+---
+
+= WSL2上でpushするとGitの認証が毎回走る
+
+WSL2上でコミットしてpushすると毎回認証を聞かれるため調査
+
+== 対応
+
+. `/usr/bin/git-credential-manager` を編集し以下を追加
++
+[source,sh]
+----
+#!/bin/sh
+exec /mnt/c/Program\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe $@
+----
+. 権限を変更
+** `sudo chmod +x /usr/bin/git-credential-manager``
+. `$HOME/.gitconfig` を編集
++
+[source,config]
+----
+[credential]
+helper = manager
+----
+
+== 参考
+
+* https://blog.anaisbetts.org/using-github-credentials-in-wsl2/[Use the Windows Git Credential Provider in WSL]
