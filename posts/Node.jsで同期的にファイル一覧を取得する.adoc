@@ -1,0 +1,65 @@
+---
+title: Node.jsで同期的にファイル一覧を取得する
+date: 2021-11-25T07:52:00+09:00
+draft: false
+categories:
+  - Node.js
+tags:
+  - Node.js
+  - JavaScript
+---
+
+= Node.jsで同期的にファイル一覧を取得する
+
+時々Node.jsでモジュールなしかつ同期的にファイル一覧を取得する必要があるので書いた。
+
+== 実装
+
+. file一覧
+[source,js]
+----
+const fs = require("fs");
+const path = require("path");
+const targetDirpath = "./target";
+
+function listFiles(dir) {
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((dirent) => {
+      const filePath = path.join(dir, dirent.name);
+      if (dirent.isFile()) {
+        return [filePath];
+      }
+      return listFiles(filePath);
+    });
+}
+const filePathList = listFiles(targetDirpath);
+console.log(filePathList)
+----
+
+== 確認
+
+. `tree ./target/`
+[source,txt]
+----
+./target/
+└── bbb
+    ├── ccc.txt
+    ├── ddd
+    │   └── bbb
+    │       └── aaa.txt
+    ├── empty ※ディレクトリ
+    └── ggg
+        └── xyz ※ファイル
+----
++
+. `node fileList.js`
+[source,console]
+----
+szk@X1:/mnt/c/Users/szk/tmp/sample$ node fileList.js 
+[
+  'target/bbb/ccc.txt',
+  'target/bbb/ddd/bbb/aaa.txt',
+  'target/bbb/ggg/xyz'
+]
+----
