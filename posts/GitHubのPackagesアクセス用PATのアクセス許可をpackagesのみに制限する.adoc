@@ -1,4 +1,14 @@
-
+---
+title: GitHubのPackagesアクセス用PATのアクセス許可をpackagesのみに制限する
+date: 2021-11-22T22:37:00+09:00
+draft: false
+categories:
+  - Service
+  - GitHub
+tags:
+  - GitHub
+  - GitHubPackages
+---
 
 = GitHubのPackagesアクセス用PATのアクセス許可をpackagesのみに制限する
 
