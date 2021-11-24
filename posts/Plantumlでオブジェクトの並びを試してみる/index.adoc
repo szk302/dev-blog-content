@@ -1,6 +1,6 @@
 ---
 title: PlantUMLでオブジェクトの並びを試してみる
-date: 2021-11-22T08:50:00+09:00
+date: 2021-11-25T08:20:00+09:00
 draft: false
 categories:
   - OSS
