@@ -1,0 +1,25 @@
+---
+title: GoのPercent-encoding用関数はPath用とQuery用の2種類ある
+date: 2021-11-26T05:39:00+09:00
+draft: false
+categories:
+  - Language
+  - Go
+tags:
+  - Go
+---
+
+= GoのPercent-encoding用関数はPath用とQuery用の2種類ある
+
+GoのPercent-encoding用関数はPath用とQuery用の2種類ある。
+
+* Path用
+** url.PathEscape()
+** url.PathUnescape()
+* Query用
+** url.QueryEscape()
+** url.QueryUnescape()
+
+== 参考
+
+* https://xn--go-hh0g6u.com/pkg/net/url/[Go言語/パッケージ url]
