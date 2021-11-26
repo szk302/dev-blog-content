@@ -1,0 +1,24 @@
+---
+title: Goで標準出力にログを出力する
+date: 2021-11-27T08:42:00+09:00
+draft: false
+categories:
+  - ProgrammingLanguages
+tags:
+  - Go
+---
+
+= Goで標準出力にログを出力する
+
+軽くデバッグするために標準出力に出す方法を調べた
+
+[source,go]
+----
+package main
+
+import "log"
+
+func main() {
+	log.Println("ログ")
+}
+----
