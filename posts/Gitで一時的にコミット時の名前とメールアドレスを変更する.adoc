@@ -1,0 +1,25 @@
+---
+title: Gitで一時的にコミット時の名前とメールアドレスを変更する
+date: 2021-11-27T08:35:00+09:00
+draft: false
+categories:
+  - OSS
+  - Git
+tags:
+  - Git
+---
+
+= Gitで一時的にコミット時の名前とメールアドレスを変更する
+
+一時的にcloneしたリポジトリに対しコミットしたい場合に名前とメールアドレスを変えたかったので調査
+
+`-c`オプションをつけてコマンドを実行
+
+[source,sh]
+----
+git -c user.name='名前' -c user.email='名前@example.com' commit -m 'メッセージ'
+----
+
+== 参考
+
+* https://stackoverflow.com/questions/22058041/commit-without-setting-user-email-and-user-name[Commit without setting user.email and user.name]
