@@ -1,0 +1,120 @@
+---
+title: GitHubActionsで別のJobの成果物を利用する
+date: 2021-11-26T05:39:00+09:00
+draft: false
+categories:
+  - Service
+  - GitHub
+tags:
+  - GitHub
+  - GitHubActions
+---
+
+= GitHubActionsで別のJobの成果物を利用する
+
+あるJobでビルドしてartifactとしてアップロードし、別のJobでアップロードしたartifactを使用した
+
+== 実装
+
+actions/checkout@v2を使うとすぐにできた。 + 
+Job間の実行順の制御が必要なため、 `needs: build` を指定している。
+
+. dev-blog-builder/.github/workflows/build.yml
+[source,yml]
+----
+name: Build Szk302 dev blog
+on:
+  workflow_dispatch: 
+    inputs:
+      hugo_version:
+        description: 'Hugo version'
+        default: '0.80.0'
+        required: false
+      asciidoctor_version:
+        description: 'Hugo version'
+        default: '1.14.0'
+        required: false
+  workflow_call:
+    inputs:
+      hugo_version:
+        description: 'Hugo version'
+        default: ''
+        required: false
+        type: string
+      asciidoctor_version:
+        description: 'Hugo version'
+        default: ''
+        required: false
+        type: string
+    secrets:
+        CR_PAT:
+            required: true
+        GR_PAT:
+            required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/szk302/dev-blog-builder:hugo-${{ inputs.hugo_version }}_asciidoctor-${{ inputs.asciidoctor_version }}
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          github_token: ${{ secrets.GR_PAT }}
+          branch: main
+          repository: ${{ github.repository_owner }}/dev-blog-builder
+      - 
+        name: Fetch content
+        run: git submodule update --init --recursive --remote
+      - 
+        name: Build dev blog
+        run: hugo --destination public
+      - 
+        name: Archive generated html
+        uses: actions/upload-artifact@v2
+        with:
+          name: dev-blog-html
+          path: public
+  commit:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/dev-blog-html
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: dev-blog-html
+          path: public
+      - 
+        name: Commit files
+        run: |
+            git config --local user.email "69619077+github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add public
+            git diff-index --quiet HEAD || git commit -m 'Auto commit'
+      - 
+        name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GR_PAT }}
+          branch: main
+          repository: ${{ github.repository_owner }}/dev-blog-html
+----
+
+== 参考
+
+* https://github.com/actions/download-artifact[actions/download-artifact]
+
+
+
+
