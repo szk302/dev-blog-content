@@ -1,0 +1,34 @@
+---
+title: CROSS-ENVで環境に関係なく環境変数を指定してYarnのスクリプトを実行する
+date: 2021-12-03T00:00:00+00:00
+draft: false
+categories:
+  - Development
+  - OSS
+tags:
+  - Yarn
+  - cross-env
+---
+
+= CROSS-ENVで環境に関係なく環境変数を指定してYarnのスクリプトを実行する
+
+Yarnでスクリプト実行時にWindowsやLinux環境を考慮せずに環境変数を指定したい。 +
+CROSS-ENVを使用するとマルチ環境で環境変数を指定できるようだ。
+
+== インストール
+
+[source,cmd]
+----
+yarn add --dev cross-env
+----
+
+== 定義
+
+[source,json]
+----
+{
+    "scripts": {
+        "deploy": "cross-env NODE_ENV=\"production\" node build-scripts/deploy.js"
+    }
+}
+----
