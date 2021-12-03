@@ -1,0 +1,26 @@
+---
+title: react-app-rewiredでビルドしたコードのclass名を固定化したい
+date: 2021-12-03T00:00:00+00:00
+draft: false
+categories:
+  - Development
+tags:
+  - webpack
+  - React
+  - react-ap-rewired 
+---
+
+= react-app-rewiredでビルドしたコードのclass名を固定化したい
+
+react-app-rewiredでビルドしたときに、クラス名にハッシュ値がつく。  
+結局使用したかったが、このクラス名を固定化したかった。
+
+`localIdentName` を指定して見たが、固定化できなかった。 +
+`getLocalIdent` を使用すると変更できた。
+
+
+
+== 参考
+
+* https://webpack.js.org/loaders/css-loader/#getlocalident[getLocalIdent]
+* https://stackoverflow.com/questions/54679808/modify-output-of-localidentname-getlocalident[Modify output of localIdentName / getLocalIdent]
