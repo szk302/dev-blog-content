@@ -1,26 +1,17 @@
 ---
 title: "このブログについて"
-date: 2021-11-14T00:27:20+09:00
-draft: false
+date: 2021-12-10T06:26:00+09:00
+draft: true
 isCJKLanguage: true
 categories:
-    - hugo
+    - szk302
 tags:
-    - hello
-    - world
-hidemeta: false
-comments: false
-description: "Desc Text."
-disableHLJS: true # to disable highlightjs
-disableShare: false
-disableHLJS: false
-hideSummary: false
-searchHidden: false
-ShowReadingTime: true
-ShowBreadCrumbs: true
-ShowPostNavLinks: true
+    - szk302
 ---
 
 = このブログについて
 
-工事中
+== プライバシーポリシー
+
+当ブログでは、Googleによるアクセス解析ツール「Googleアナリティクス」を使用しています。このGoogleアナリティクスはデータの収集のためにCookieを使用しています。このデータは匿名で収集されており、個人を特定するものではありません。 + 
+この機能はCookieを無効にすることで収集を拒否することが出来ますので、お使いのブラウザの設定をご確認ください。この規約に関しての詳細は https://marketingplatform.google.com/about/analytics/terms/jp/[Googleアナリティクスサービス利用規約] のページや https://policies.google.com/technologies/ads?hl=ja[Googleポリシーと規約] ページをご覧ください。
