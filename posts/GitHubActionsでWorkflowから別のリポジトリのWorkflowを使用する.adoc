@@ -1,0 +1,153 @@
+---
+title: GitHubActionsでWorkflowから別のリポジトリのWorkflowを使用する
+date: 2021-11-26T05:39:00+09:00
+draft: false
+categories:
+  - Service
+  - GitHub
+tags:
+  - GitHub
+  - GitHubActions
+---
+
+= GitHubActionsでWorkflowから別のリポジトリのWorkflowを使用する
+
+このBlogを構築するにあたりGitHubActionsを利用した。
+
+コンテンツ用リポジトリとHugoの環境のリポジトリを分けており、
+コンテンツに投稿するとコンテンツ用リポジトリのWorkflowが動きHugoの環境のリポジトリのWorkflowを呼び出す形になっている
+
+JenkinsのJobから別Jobを呼び出すものとは違い単純に他のリポジトリのworkflowのymlを使用して、実行しているリポジトリのWorkflowとして使う形になるようだ。
++
+Secretsも呼び出される側のリポジトリ(dev-blog-builder)で指定していたが、呼び出し側で実行時に指定しなければならず、呼び出される側にも `workflow_call.inputs` に定義する必要がある
++
+また、成果物も呼び出している側のWorkflowの成果物として扱われる
+
+
+== 実装
+
+* 呼び出す側
+
+. blog-content/.github/workflows/update-dev-blog.yml
+[source,yml]
+----
+name: Update Szk302 dev blog
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build_dev_blog:
+    uses: "szk302/dev-blog-builder/.github/workflows/build.yml@main"
+    with:
+      hugo_version: '0.80.0'
+      asciidoctor_version: '1.14.0'
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }} # コンテナリポジトリ用
+      GR_PAT: ${{ secrets.GR_PAT }} # GitHubリポジトリ用
+----
+
+* 呼び出される側
+
+. dev-blog-builder/.github/workflows/build.yml
+[source,yml]
+----
+name: Build Szk302 dev blog
+on:
+  workflow_dispatch: 
+    inputs:
+      hugo_version:
+        description: 'Hugo version'
+        default: '0.80.0'
+        required: false
+      asciidoctor_version:
+        description: 'Hugo version'
+        default: '1.14.0'
+        required: false
+  workflow_call:
+    inputs:
+      hugo_version:
+        description: 'Hugo version'
+        default: ''
+        required: false
+        type: string
+      asciidoctor_version:
+        description: 'Hugo version'
+        default: ''
+        required: false
+        type: string
+    secrets:
+        CR_PAT:
+            required: true
+        GR_PAT:
+            required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      # image: ghcr.io/szk302/dev-blog-builder:hugo-${{ github.event.inputs.hugo_version }}_asciidoctor-${{ github.event.inputs.asciidoctor_version }}
+      image: ghcr.io/szk302/dev-blog-builder:hugo-${{ inputs.hugo_version }}_asciidoctor-${{ inputs.asciidoctor_version }}
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          github_token: ${{ secrets.GR_PAT }}
+          branch: main
+          repository: ${{ github.repository_owner }}/dev-blog-builder
+      - 
+        name: Fetch content
+        run: git submodule update --init --recursive --remote
+      - 
+        name: Build dev blog
+        run: hugo --destination public
+      - 
+        name: Archive generated html
+        uses: actions/upload-artifact@v2
+        with:
+          name: dev-blog-html
+          path: public
+  commit:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/dev-blog-html
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: dev-blog-html
+          path: public
+      - 
+        name: Commit files
+        run: |
+            git config --local user.email "69619077+github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add public
+            git diff-index --quiet HEAD || git commit -m 'Auto commit'
+      - 
+        name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GR_PAT }}
+          branch: main
+          repository: ${{ github.repository_owner }}/dev-blog-html
+----
+
+== 参考
+
+* https://docs.github.com/en/actions/learn-github-actions/reusing-workflows[GitHub Actions/Learn GitHub Actions/Reusing workflows]
+* https://zenn.dev/korosuke613/scraps/dc18529983a95e[GitHub Actionsのワークフロー再利用を試してみる]
+* https://github.community/t/reusable-workflows-secrets-and-environments/203695/13[Reusable Workflows, Secrets and Environments]
+
+
+
