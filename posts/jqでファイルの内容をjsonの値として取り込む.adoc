@@ -3,10 +3,9 @@ title: jqでファイルの内容をjsonの値として取り込む
 date: 2021-12-13T14:33:00+09:00
 draft: false
 categories:
-  - Node.js
+  - Tools
 tags:
-  - Jq
-  - JavaScript
+  - jq
 ---
 
 = jqでファイルの内容をjsonの値として取り込む
