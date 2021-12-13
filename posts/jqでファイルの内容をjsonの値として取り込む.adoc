@@ -1,0 +1,67 @@
+---
+title: jqでファイルの内容をjsonの値として取り込む
+date: 2021-12-13T14:33:00+09:00
+draft: false
+categories:
+  - Node.js
+tags:
+  - Jq
+  - JavaScript
+---
+
+= jqでファイルの内容をjsonの値として取り込む
+
+ファイルの内容を改行などをエスケープしつつjsonの項目のvalueとして取り込みたい
+
+== 対応
+
+rawfileオプションを使用する
+
+rawfile:: 指定されたファイルを読み込み、その内容を指定されたグローバル変数にバインドする
+
+指定方法は `--rawfile 変数名 読み込みファイルパス`
+
+.import.txt
+[source,txt]
+----
+abc
+"def"
+hij
+----
+
+.base.json
+[source,json]
+----
+{
+  "title": "Sample json",
+  "body": {
+    "storage": {
+      "value": ""
+    }
+  }
+}
+----
+
+.rawfileオプション付きjq実行
+[source,sh]
+----
+jq '.body.storage.value |=$value' --rawfile value ./import.txt base.json
+----
+
+.結果
+[source,json]
+----
+{
+  "title": "Sample json",
+  "body": {
+    "storage": {
+      "value": "abc\r\n\"def\"\r\nhij"
+    }
+  }
+}
+----
+
+
+== 参考
+
+* https://stedolan.github.io/jq/manual/[jq Manual (development version)]
