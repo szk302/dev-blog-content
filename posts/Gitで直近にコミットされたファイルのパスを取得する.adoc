@@ -1,0 +1,30 @@
+---
+title: Gitで直近にコミットされたファイルのパスを取得する
+date: 2021-12-15T00:45:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - Git
+---
+
+= Gitで直近にコミットされたファイルのパスを取得する
+
+Gitで直近にコミットされたファイルのパスを取得した。
+
+[source,sh]
+----
+git log --pretty="" -1 --name-only -- *.adoc
+----
+
+.表示結果
+[source,console]
+----
+posts/jqでファイルの内容をjsonの値として取り込む.adoc
+----
+
+== コマンド
+
+== 参考
+
+* https://stackoverflow.com/questions/1230084/how-to-have-git-log-show-filenames-like-svn-log-v/1230094[How to have 'git log' show filenames like 'svn log -v']

@@ -1,3 +1,4 @@
 [submodule "environment"]
 	path = environment
 	url = https://github.com/szk302/dev-blog-environment.git
+	branch = main
