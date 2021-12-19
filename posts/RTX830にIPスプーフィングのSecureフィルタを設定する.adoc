@@ -1,0 +1,95 @@
+---
+title: RTX830にIPスプーフィングのSecureフィルタを設定する
+date: 2021-12-19T14:49:00+09:00
+draft: false
+categories:
+  - Network
+tags:
+  - RTX830
+---
+
+= RTX830にIPスプーフィングのSecureフィルタを設定する
+
+以下の攻撃に対するフィルタを設定する
+
+IPスプーフィング:: 送信元のIPアドレスを偽装し、通信を行う攻撃手法
+Land攻撃:: 送信元IPアドレスと送信先IPアドレスが同一のパケットを攻撃対象コンピュータに送るDoS攻撃の一種
+Smurf攻撃:: 標的となるコンピュータのIPアドレスを送信元アドレスとしてなりすまし、標的に向けて大量のパケットを送りつけるDoS攻撃の一種
+
+NOTE: 今回はppではなくlan2に設定
+
+== 設定
+
+[source,filter]
+----
+ip filter 60 reject 203.0.113.0/24 * * * *
+ip filter 61 reject 10.0.0.0/8 * * * *
+ip filter 62 reject 172.16.0.0/12 * * * *
+ip filter 63 reject 192.168.0.0/16 * * * *
+ip filter 100 pass * 203.0.113.0/24 * * *
+ip lan2 secure filter in 60 61 62 63 100
+----
+
+=== フィルタ箇所
+
+以下フィルタ箇所は http://www.rtpro.yamaha.co.jp/RT/FAQ/IP-Filter/apply-filter-to-interface.html[IPパケット・フィルタリング機能がどこで働くかわからない。] から
+
+----
+                    :
+             [LAN2] :
+                    :
+  +-----------------+-------------------+
+  |                 |                   |
+  |  +-----------------------------+    |
+  |  |      Ethernet processing    |    |
+  |  +-----------------------------+    |
+  |                 |                   |
+  |  +-----------------------------+    |
+  |  |          IP filter          |    |
+  |  | +----(↓)----+----(↑)------+ |    | ip filter ...
+  |  | |     in     |    out     | |    | ip lan2 secure filter in/out ....
+  |  | +----(↓)----+----(↑)------+ |    | 
+  |  +-----------------------------+    |
+  |                 |                   |
+  |               (LAN)                 | ip lan2 address
+  |                 |                   |
+  |  +-----------------------------+    |
+  |  |       IPルーティング         |    |
+  |  +-----------------------------+    |
+  |                 |                   |
+  |               (LAN)                 | ip lan1 address
+  |                 |                   |
+  |  +-----------------------------+    |
+  |  |          IP filter          |    |
+  |  | +----(↑)----+----(↓)------+ |    | ip filter ...
+  |  | |     in     |    out     | |    | ip lan1 secure filter in/out ....
+  |  | +----(↑)----+----(↓)------+ |    | 
+  |  +-----------------------------+    |
+  |                 |                   |
+  |                 |       < in >      |
+  |  +-----------------------------+    |
+  |  |         NAT descriptor      |    | nat descriptor ...
+  |  |  +-(1)-+-(2)-+-(3)-+-(4)-+  |    | ip lan1 nat descriptor ...
+  |  |  | ▼  | ▼  | ▼  | ▼  |   |  |    |
+  |  |  +-----+-----+-----+-----+  |    |
+  |  +-----------------------------+    |
+  |                 |       < out >     |
+  |                 |                   |
+  |  +-----------------------------+    |
+  |  |      Ethernet processing    |    |
+  |  +-----------------------------+    |
+  |                 |                   |
+  +-----------------+-------------------+
+                    |
+             [LAN1] |
+                    |
+  ------------------+--------------------
+----
+
+== 参考
+
+* http://www.rtpro.yamaha.co.jp/RT/FAQ/IP-Filter/ip-spoofing-filter.html[IPアドレス・スプーフィング攻撃(ip spoofing)に対処するフィルタを教えて下さい。]
+* http://www.rtpro.yamaha.co.jp/RT/FAQ/IP-Filter/apply-filter-to-interface.html[IPパケット・フィルタリング機能がどこで働くかわからない。]
+* https://e-words.jp/w/LAND%E6%94%BB%E6%92%83.html[LAND攻撃 【Local Area Network Denial attack】 LAND attack / ランド攻撃]
+* https://e-words.jp/w/Smurf%E6%94%BB%E6%92%83.html[Smurf攻撃 【Smurf attack】 スマーフアタック]
+* https://ja.wikipedia.org/wiki/IP%E3%82%B9%E3%83%97%E3%83%BC%E3%83%95%E3%82%A3%E3%83%B3%E3%82%B0[IPスプーフィング]
