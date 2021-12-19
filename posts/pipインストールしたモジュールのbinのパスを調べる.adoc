@@ -1,0 +1,53 @@
+---
+title: pipインストールしたモジュールのbinのパスを調べる
+date: 2021-12-19T10:01:00+09:00
+draft: false
+categories:
+  - OSS
+tags:
+  - Python
+  - pip
+---
+
+= pipインストールしたモジュールのbinのパスを調べる
+
+pipで *git-filter-repo* をインストールしたが、 `git: 'filter-repo' is not a git command` というエラーが発生 + 
+原因はgit-filter-repoのパスが通っていないせいだった。 + 
+git-filter-repoのパスを調査
+
+== 方法
+
+`pip show -f モジュール名` を実行する
+
+. `pip show -f git-filter-repo` を実行
+. 表示 +
+[source,console]
+----
+Name: git-filter-repo
+Version: 2.34.0
+Summary: Quickly rewrite git repository history
+Home-page: https://github.com/newren/git-filter-repo
+Author: None
+Author-email: None
+License: MIT
+Location: /home/szk/.local/lib/python3.8/site-packages
+Requires:
+Required-by:
+Files:
+  ../../../bin/git-filter-repo
+  __pycache__/git_filter_repo.cpython-38.pyc
+  git_filter_repo-2.34.0.data/scripts/git-filter-repo
+  git_filter_repo-2.34.0.dist-info/INSTALLER
+  git_filter_repo-2.34.0.dist-info/METADATA
+  git_filter_repo-2.34.0.dist-info/RECORD
+  git_filter_repo-2.34.0.dist-info/WHEEL
+  git_filter_repo-2.34.0.dist-info/entry_points.txt
+  git_filter_repo-2.34.0.dist-info/top_level.txt
+  git_filter_repo.py
+----
+
+Filesの1行目がbinのパス。Locationからの相対パスになっているようだった。
+
+== 参考
+
+* https://tech.innovator.jp.net/entry/2019/01/15/130014[pip installで導入したパッケージのバイナリファイルのパスを知る方法]
