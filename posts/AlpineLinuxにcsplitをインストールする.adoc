@@ -1,0 +1,39 @@
+---
+title: AlpineLinuxにcsplitをインストールする
+date: 2021-12-19T22:36:00+09:00
+draft: false
+categories:
+  - OS
+  - AlpineLinux
+tags:
+  - AlpineLinux
+  - Linux
+  - OS
+---
+
+= AlpineLinuxにcsplitをインストールする
+
+AlpineLinuxでcsplitを使用したい
+
+== インストール
+
+[source,sh]
+----
+apk add coreutils
+----
+
+.csplit --version
+[source,console]
+----
+csplit (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Stuart Kemp and David MacKenzie.
+----
+
+== 参考
+
+* https://command-not-found.com/csplit[csplit]
