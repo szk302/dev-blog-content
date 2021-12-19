@@ -1,0 +1,23 @@
+---
+title: テストに使用できる特別なIP
+date: 2021-12-20T08:38:00+09:00
+draft: false
+categories:
+  - Netowrk
+tags:
+  - Network
+  - RFC
+  - RFC6890
+---
+
+= テストに使用できる特別なIP
+
+ブログの記事中で記述できるドメインの *example.com* のような特別なIPを調査
+
+* TEST-NET-2: 203.0.113.0/24
+
+== 参考
+
+* https://datatracker.ietf.org/doc/html/rfc6890[rfc6890]
+* https://tex2e.github.io/rfc-translater/html/rfc6890.html[RFC 6890 - Special-Purpose IP Address Registries 日本語訳]
+
