@@ -1,0 +1,76 @@
+---
+title: yqでyamlからjsonに変換する
+date: 2021-12-19T22:34:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - yq
+---
+
+= yqでyamlからjsonに変換する
+
+yamlからjsonに変換する必要があったため調査
+
+== 環境
+
+* yq: version 4.16.1
+
+== 方法
+
+=== ファイルから
+
+.xx00(ymlファイル)
+[source,yml]
+----
+title: PlantUMLでオブジェクトの並びを試してみる
+date: 2021-11-25T08:20:00+09:00
+draft: false
+categories:
+  - OSS
+tags:
+  - PlantUML
+----
+
+. 実行 +
+`yq e xx00 -o json`
+
+.コンソール
+[source,console]
+----
+{
+  "title": "PlantUMLでオブジェクトの並びを試してみる",
+  "date": "2021-11-25T08:20:00+09:00",
+  "draft": false,
+  "categories": [
+    "OSS"
+  ],
+  "tags": [
+    "PlantUML"
+  ]
+}
+----
+
+== 標準入力から
+
+cat xx00 | yq e - -o json
+
+.コンソール
+[source,console]
+----
+{
+  "title": "PlantUMLでオブジェクトの並びを試してみる",
+  "date": "2021-11-25T08:20:00+09:00",
+  "draft": false,
+  "categories": [
+    "OSS"
+  ],
+  "tags": [
+    "PlantUML"
+  ]
+}
+----
+
+== 参考
+
+* https://github.com/mikefarah/yq[mikefarah/yq]
