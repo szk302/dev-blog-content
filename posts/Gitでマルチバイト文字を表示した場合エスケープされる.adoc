@@ -1,0 +1,28 @@
+---
+title: Gitでマルチバイトの文字を表示した場合エスケープされる
+date: 2021-12-19T22:12:00+09:00
+draft: false
+categories:
+  - OSS
+  - Git
+tags:
+  - Git
+---
+
+= Gitでマルチバイト文字を表示した場合エスケープされる
+
+== 対応
+
+[source,sh]
+----
+git config --global core.quotepath false
+----
+
+== オプション
+
+core.quotepath:: Cのエスケープ方法と同じようにマルチバイト文字をエスケープする(default:true)
+
+== 参考
+
+* https://git-scm.com/docs/git-config[core.quotepath]
+* https://gist.github.com/kkato233/2775eda33918dafac5be702077ca7ea3[kkato233/git日本語設定.md]
