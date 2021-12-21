@@ -1,0 +1,29 @@
+---
+title: Gitのリポジトリの設定としてユーザ名とメールアドレスを設定する
+date: 2021-12-22T08:10:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - jq
+---
+
+= Gitのリポジトリの設定としてユーザ名とメールアドレスを設定する
+
+環境変数からユーザ名とメールアドレスを指定していたが、WSLやコンテナ内からのコミットで切り替わり、誤コミット連発したのでローカル設定として設定したい。
+
+== 方法
+
+== --localを使用する
+
+NOTE: デフォルト動作らしいのでなくてもいいらしい
+
+[source,sh]
+----
+git config --local user.name "名前"
+git config --local user.email "メールアドレス"
+----
+
+== 参考
+
+* https://git-scm.com/docs/git-config[--local]
