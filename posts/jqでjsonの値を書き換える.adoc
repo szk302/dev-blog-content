@@ -1,0 +1,51 @@
+---
+title: jqでjsonの値を書き換える
+date: 2021-12-22T07:51:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - jq
+---
+
+= jqでjsonの値を書き換える
+
+jqでjsonの一部の値だけ書き換えたい
+
+== 方法
+
+更新割当演算子(`|=`)を使用する
+
+=== Ex
+
+.base.json
+[source,json]
+----
+{
+  "title": "Sample json",
+  "body": {
+    "storage": {
+      "value": ""
+    }
+  }
+}
+----
+
+
+`jq '.body.storage.value |="xyz"' base.json`
+
+[source,console]
+----
+{
+  "title": "Sample json",
+  "body": {
+    "storage": {
+      "value": "xyz"
+    }
+  }
+}
+----
+
+== 参考
+
+* https://stedolan.github.io/jq/manual/#Update-assignment:|=[jq Manual (development version)/Update-assignment: |=]
