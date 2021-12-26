@@ -1,0 +1,71 @@
+---
+title: PowershellでHTTPサーバを建てる
+date: 2021-12-27T07:52:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - PowerShell
+---
+
+= PowershellでHTTPサーバを建てる
+
+WindowsPCを使用したネットワーク疎通確認用にPowershellで簡易HTTPサーバを作成した。
+
+.http-server.ps1
+[source,ps1]
+----
+$html = @"
+<!doctype html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>TestPage</title>
+    <meta name="description" content="Test page">
+  </head>
+  <body>
+    <h1>Test</h1>
+    <div>Sample</div>
+  </body>
+</html>
+"@
+
+$port = 80
+
+Write-Host "Start http server"
+Write-Host "Press ESC to stop the http server ..." -fore yellow
+Write-Host ""
+
+$listener = New-Object system.net.HttpListener
+$listener.Prefixes.Add('http://127.0.0.1:' + $port + '/')
+try {
+    $listener.Start()
+    while ($true) {
+        if ( $host.ui.RawUi.KeyAvailable ) {
+            $key = $host.ui.RawUI.ReadKey( "NoEcho,IncludeKeyUp,IncludeKeyDown" )
+            if ( $key.VirtualKeyCode -eq 27 ) {
+                break
+            }
+        }
+ 
+        $context = $listener.GetContext()
+        $response = $context.Response
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($html)
+        $response.ContentLength64 = $bytes.Length
+        $output = $response.OutputStream	
+        $output.Write($bytes, 0, $bytes.Length)	
+        $output.Close()
+    }
+} finally {
+    $listener.Stop()
+}
+----
+
+== 実行方法
+
+管理者権限で `http-server.ps1` を実行する
+
+== 参考
+
+* https://abrakatabura.hatenablog.com/entry/2014/02/07/120906[PowerShellで簡易HTTPサーバーを作ってみる]
