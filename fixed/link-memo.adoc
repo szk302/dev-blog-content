@@ -13,8 +13,7 @@ tags:
 
 忘れやすいので以下の条件のリンクをここに貼り付ける
 
-* 公式サイトであること
-* リンクに記載されている内容通りの作業
+* リンクに記載されている内容通りの作業しかしていない場合
 
 == Service
 
@@ -22,3 +21,7 @@ tags:
 
 * https://docs.github.com/ja/actions/managing-workflow-runs/downloading-workflow-artifacts[ワークフローの成果物をダウンロードする]
 
+
+== Powershell
+
+* https://qiita.com/watahani/items/3cb6a9d00d5dc1e2ba73[Wi-Fiのパスワードを表示するワンライナー]
