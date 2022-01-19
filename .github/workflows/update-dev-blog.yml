@@ -13,3 +13,18 @@ jobs:
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
       GR_PAT: ${{ secrets.GR_PAT }}
+  publish_to_confluence:
+    uses: "szk302/dev-blog-confluence-publisher/.github/workflows/publish.yml@main"
+    with:
+      pandoc_version: '2.16.2'
+      asciidoctor_version: '1.14.0'
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }}
+      GR_PAT: ${{ secrets.GR_PAT }}
+      CONFLUENCE_TEAM: ${{ secrets.CONFLUENCE_TEAM }}
+      CONFLUENCE_USER_ID: ${{ secrets.CONFLUENCE_USER_ID }}
+      CONFLUENCE_API_KEY: ${{ secrets.CONFLUENCE_API_KEY }}
+      CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+      CONFLUENCE_ANCESTOR_ID: ${{ secrets.CONFLUENCE_ANCESTOR_ID }}
+
+
