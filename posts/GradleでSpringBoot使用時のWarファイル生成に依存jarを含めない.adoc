@@ -1,0 +1,28 @@
+---
+title: GradleでSpringBoot使用時のWarファイル生成に依存jarを含めない
+date: 2022-01-12T08:42:00+09:00
+draft: false
+tags:
+  - Gradle
+  - SpringBoot
+---
+
+= GradleでSpringBoot使用時のWarファイル生成に依存jarを含めない
+
+SpringBootを使用して作成したWebアプリケーションをWarにするときに、依存ライブラリを別にしたい
+
+== 方法
+
+. dependenciesの書き方をimplementationからprovidedCompileに変える
+. build.gradleに以下の設定を追加
++ 
+[source,groovy]
+----
+bootWar {
+  providedClasspath=[]
+}
+----
+
+== 参考
+
+* https://spring.pleiades.io/spring-boot/docs/current/gradle-plugin/api/org/springframework/boot/gradle/tasks/bundling/BootWar.html[クラス BootWar]
