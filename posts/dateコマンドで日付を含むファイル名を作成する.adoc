@@ -1,0 +1,26 @@
+---
+title: dateコマンドで日付を含むファイル名を作成する
+date: 2022-01-19T23:39:00+09:00
+draft: false
+tags:
+  - Linux
+  - date
+---
+
+= dateコマンドで日付を含むファイル名を作成する
+
+日付を含むファイル名を生成したい
+
+[source,sh]
+----
+FILE_PATH=sample.adoc
+FILE_NAME="${FILE_PATH##*/}"
+POST_DATA_TITLE="${FILE_NAME%%.adoc}_`TZ=Asia/Tokyo date +%Y%m%d_%H-%M-%S`.adoc"
+echo ${POST_DATA_TITLE}
+----
+
+[source,console]
+----
+sample_20220119_23-37-31.adoc
+----
+
