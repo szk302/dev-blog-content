@@ -1,0 +1,63 @@
+---
+title: AWSDirectConnectの接続方法
+date: 2022-01-24T22:32:00+09:00
+draft: false
+categories:
+  - Service
+tags:
+  - AWS
+  - AWS Direct Connect
+---
+
+= AWSDirectConnectの接続方法
+
+AWSDirectConnectを使用してS3やAPIGateway(Public)に接続したいという要件が出たため調査
+
+専用接続、ホスト接続型、ホストVIF、占有VIFなど似たような用語が複数あり混乱した。
+
+== AWS Direct Connectとは
+
+専用線の片端とAWS CloudをDirect Connectロケーションで接続するサービス
+
+== 接続方法
+
+DirectConnectを使用するには以下の3つの接続パターンがある(ConnectionとVIFの組み合わせ)
+
+標準 VIF:: 親 Direct Connect 接続が存在する AWS アカウントで接続
+ホストVIF:: 同じ親 Direct Connect 接続を使用している別の AWS アカウント or Amazon パートナーネットワーク (APN) のパートナーから購入した VIF
+ホスト型接続:: プロビジョニングする APN パートナーから購入した sub-1G 接続
+
+== Connection
+
+Connectionは以下の２つ
+
+* 専用接続(標準VIF(占有型)とホストVIF(共有型))
+* ホスト接続(Sub-1G)
+
+== 標準VIF(占有型)とホストVIF(共有型)
+
+* 標準VIF(占有型)
+** Connection自体提供される
+** VIFを自由に設定可能
+* ホストVIF(共有型)
+** Connectionは別アカウント
+** VIFが払い出される
+** 1Connectionを複数アカウントで共有
+
+== VIFの種類
+
+Connectionを通してAWSリソースにアクセスするための論理インターフェイス
+
+パブリックVIF:: AWSパブリックサービスへの接続時に利用
+プライベートVIF:: AWSのVPC接続時に利用
+トランジットVIF:: Transit Gateway(TGW)接続時に利用
+
+== 参考
+
+* https://d1.awsstatic.com/webinars/jp/pdf/services/20210209-AWS-Blackbelt-DirectConnect.pdf[AWS Black Belt Online Seminar/AWS Direct Connect]
+* https://docs.aws.amazon.com/ja_jp/directconnect/latest/UserGuide/dc-ug.pdf[AWS Direct Connectユーザーガイド]
+* https://aws.typepad.com/sajp/2014/12/aws-direct-connect-public.html[Direct Connectを利用して専用線経由でS3やDyamoDBへアクセスする (AWS Direct Connect のパブリック接続)]
+* https://aws.amazon.com/jp/premiumsupport/knowledge-center/direct-connect-types/[ホスト型仮想インターフェイス (VIF) とホスト型接続の違いは何ですか?]
+* https://d1.awsstatic.com/events/reinvent/2019/REPEAT_1_Become_an_AWS_VPN_and_AWS_Direct_Connect_expert_NET412-R1.pdf[Become an AWS VPN andAWS Direct Connect expert]
+* https://dev.classmethod.jp/articles/direct-connect-connection-pattern-vif/[Direct Connect接続タイプとVIF作成パターンをまとめてみた]
+* https://dev.classmethod.jp/articles/re-introduction-2020-direct-connect/[AWS再入門ブログリレー AWS Direct Connect 編]
