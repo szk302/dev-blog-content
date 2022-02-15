@@ -1,0 +1,39 @@
+---
+title: AWSCLIで一時的な認証を取得する
+date: 2022-02-16T07:47:00+09:00
+draft: false
+categories:
+  - AWS
+tags:
+  - AWS
+  - AWS CLI
+---
+
+= AWSCLIで一時的な認証を取得する
+
+毎度忘れるのでメモ
+
+== 方法
+
+.一時的なTokenの取得(duration-secondsのデフォルトは12時間)
+[source,sh]
+----
+aws sts get-session-token --duration-seconds 3600
+----
+
+.表示
+[source,ps1]
+----
+{
+    "Credentials": {
+        "AccessKeyId": "アクセスキー",
+        "SecretAccessKey": "シークレットキー",
+        "SessionToken": "セッショントークン",
+        "Expiration": "2022-02-15T23:49:21+00:00"
+    }
+}
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sts/get-session-token.html[AWS CLI Command Reference/get-session-token]
