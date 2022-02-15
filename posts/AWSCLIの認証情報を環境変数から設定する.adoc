@@ -5,9 +5,8 @@ draft: false
 categories:
   - AWS
 tags:
-  - AlpineLinux
-  - Linux
-  - OS
+  - AWS
+  - AWS CLI
 ---
 
 = AWSCLIの認証情報を環境変数から設定する
