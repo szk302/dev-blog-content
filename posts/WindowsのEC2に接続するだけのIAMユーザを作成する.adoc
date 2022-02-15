@@ -1,0 +1,83 @@
+---
+title: WindowsのEC2に接続するだけのIAMユーザを作成する
+date: 2022-02-16T05:55:00+09:00
+draft: false
+categories:
+  - Service
+tags:
+  - AWS
+  - AWS IAM
+  - AWS Systems ManagerSession Manager
+---
+
+= WindowsのEC2に接続するだけのIAMユーザを作成する
+
+WindowsのEC2へSSMのポートフォワーディングを利用してRDP接続するユーザを作成したい。
+
+== 設定
+
+以下のポリシーをもつIAMユーザを作成する。
+
+.SSM Session開始/停止ポリシー
+[source,sh]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:StartSession"
+            ],
+            "Resource": [
+                "arn:aws:ssm:ap-northeast-1::document/AWS-StartPortForwardingSession",
+                "arn:aws:ec2:ap-northeast-1:アカウントID:instance/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:TerminateSession"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:*:session/${aws:username}-*"
+            ]
+        }
+    ]
+}
+----
+
+== 確認
+
+今回はPowershellから確認した
+
+=== 環境
+
+==== 接続元(ローカル)
+
+* AWSCLI:2.4.18
+* SessionManagerPlugin:1.2.295.0
+
+==== 接続先
+
+セッションマネージャのステータスがオンラインになっていること
+
+* ami: amazon/Windows_Server-2019-English-Full-Base-2022.02.10
+
+=== 手順
+
+.SSM Sessionによるポートフォワーディング
+[source,ps1]
+----
+$Env:AWS_ACCESS_KEY_ID="アクセスキー"
+$Env:AWS_SECRET_ACCESS_KEY="シークレットキー"
+$Env:AWS_DEFAULT_REGION="ap-northeast-1"
+
+aws ssm start-session --target インスタンスID --document-name AWS-StartPortForwardingSession --parameters portNumber=3389,localPortNumber=3389
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/ja_jp/systems-manager/latest/userguide/getting-started-restrict-access-examples.html[Session Manager の追加サンプル IAM ポリシー]
+* https://docs.aws.amazon.com/ja_jp/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html[(オプション) AWS CLI 用の Session Manager プラグインをインストールする]
+* https://blog.serverworks.co.jp/tech/2019/10/29/ssm-port-forwarding-prereqs/#%E8%A3%9C%E8%B6%B31S3%E3%81%AEVPC-Endpoint%E3%82%82%E5%90%88%E3%82%8F%E3%81%9B%E3%81%A6%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B[Private SubnetのEC2にSSM Port ForwardingでRDPアクセスするための通信要件]
