@@ -4,6 +4,7 @@ date: 2022-01-19T23:39:00+09:00
 draft: false
 tags:
   - Linux
+  - CLI
   - date
 ---
 
