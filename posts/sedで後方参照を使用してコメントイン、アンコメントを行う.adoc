@@ -1,0 +1,120 @@
+---
+title: sedで後方参照を使用してコメントイン、アンコメントを行う
+date: 2022-02-17T08:04:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - 正規表現
+  - CLI
+  - sed
+---
+
+= sedで後方参照を使用してコメントアウト、アンコメントを行う
+
+行番号指定でコメントアウトを行うのではなく、文字列を指定してコメントアウトする
+
+== 方法
+
+後方参照?(マッチ後変数)を使用して行う
+
+更新割当演算子(`|=`)を使用する
+
+=== コメントアウト
+
+コメントアウト対象のファイル
+
+.logging.properties
+[source,json]
+----
+1catalina.org.apache.juli.AsyncFileHandler.level = FINE
+1catalina.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+1catalina.org.apache.juli.AsyncFileHandler.prefix = catalina.
+1catalina.org.apache.juli.AsyncFileHandler.maxDays = 90
+1catalina.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+2localhost.org.apache.juli.AsyncFileHandler.level = FINE
+2localhost.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+2localhost.org.apache.juli.AsyncFileHandler.prefix = localhost.
+2localhost.org.apache.juli.AsyncFileHandler.maxDays = 90
+2localhost.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+----
+
+コマンド
+
+.console
+[source,console]
+----
+TARGET=1catalina
+sed -e "s/^\(${TARGET}.*\)/#\1/g" logging.properties
+----
+
+結果
+
+.console
+[source,console]
+----
+#1catalina.org.apache.juli.AsyncFileHandler.level = FINE
+#1catalina.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+#1catalina.org.apache.juli.AsyncFileHandler.prefix = catalina.
+#1catalina.org.apache.juli.AsyncFileHandler.maxDays = 90
+#1catalina.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+2localhost.org.apache.juli.AsyncFileHandler.level = FINE
+2localhost.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+2localhost.org.apache.juli.AsyncFileHandler.prefix = localhost.
+2localhost.org.apache.juli.AsyncFileHandler.maxDays = 90
+2localhost.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+----
+
+=== アンコメント
+
+アンコメント対象のファイル
+
+.logging.properties
+[source,json]
+----
+#1catalina.org.apache.juli.AsyncFileHandler.level = FINE
+#1catalina.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+#1catalina.org.apache.juli.AsyncFileHandler.prefix = catalina.
+#1catalina.org.apache.juli.AsyncFileHandler.maxDays = 90
+#1catalina.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+2localhost.org.apache.juli.AsyncFileHandler.level = FINE
+2localhost.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+2localhost.org.apache.juli.AsyncFileHandler.prefix = localhost.
+2localhost.org.apache.juli.AsyncFileHandler.maxDays = 90
+2localhost.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+----
+
+コマンド
+
+.console
+[source,console]
+----
+TARGET=1catalina
+sed -e "s/^#\(${TARGET}.*\)/\1/g" logging.properties
+----
+
+結果
+
+.console
+[source,console]
+----
+1catalina.org.apache.juli.AsyncFileHandler.level = FINE
+1catalina.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+1catalina.org.apache.juli.AsyncFileHandler.prefix = catalina.
+1catalina.org.apache.juli.AsyncFileHandler.maxDays = 90
+1catalina.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+2localhost.org.apache.juli.AsyncFileHandler.level = FINE
+2localhost.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+2localhost.org.apache.juli.AsyncFileHandler.prefix = localhost.
+2localhost.org.apache.juli.AsyncFileHandler.maxDays = 90
+2localhost.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+----
+
+== 参考
+
+* https://www.gnu.org/software/sed/manual/html_node/Back_002dreferences-and-Subexpressions.html[5.7 Back-references and Subexpressions]
+* https://qiita.com/scivola/items/c432bd500fe927b7b581[それは後方参照じゃない]
