@@ -1,0 +1,53 @@
+---
+title: Tomcatで不要なログ出力を停止する
+date: 2022-02-18T08:32:00+09:00
+draft: false
+tags:
+  - Tomcat
+---
+
+= Tomcatで不要なログ出力を停止する
+
+Tomcatを使用する際、managerなどのデフォルトで含まれるアプリは消すため、ログ出力設定もプロパティをコメントアウトする。
+
+以下のログ出力を停止する
+
+* manager.YYYY-MM-DD.log : managerのログ
+* host-manager.YYYY-MM-DD.log	: host-managerのログ
+
+== 環境
+
+* Tomcat: 9.0.58
+
+== 方法
+
+以下のプロパティのmanagerとhost-managerに関する行をコメントアウト
+
+.${CATALINA_HOME}/conf/logging.properties
+[source,properties]
+----
+3manager.org.apache.juli.AsyncFileHandler.level = FINE
+3manager.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+3manager.org.apache.juli.AsyncFileHandler.prefix = manager.
+3manager.org.apache.juli.AsyncFileHandler.maxDays = 90
+3manager.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+4host-manager.org.apache.juli.AsyncFileHandler.level = FINE
+4host-manager.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+4host-manager.org.apache.juli.AsyncFileHandler.prefix = host-manager.
+4host-manager.org.apache.juli.AsyncFileHandler.maxDays = 90
+4host-manager.org.apache.juli.AsyncFileHandler.encoding = UTF-8
+
+省略
+
+org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/manager].level = INFO
+org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/manager].handlers = 3manager.org.apache.juli.AsyncFileHandler
+
+org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/host-manager].level = INFO
+org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/host-manager].handlers = 4host-manager.org.apache.juli.AsyncFileHandler
+----
+
+== 参考
+
+* https://tomcat.apache.org/tomcat-9.0-doc/logging.html[Logging in Tomcat]
+* https://qiita.com/hidekatsu-izuno/items/ab604b6c764b5b5a86ed[Tomcat の初期設定まとめ]
