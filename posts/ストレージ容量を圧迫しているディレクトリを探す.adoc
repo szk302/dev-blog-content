@@ -1,0 +1,52 @@
+---
+title: ストレージ容量を圧迫しているディレクトリを探す
+date: 2022-02-18T08:07:00+09:00
+draft: false
+categories:
+  - CLI
+tags:
+  - CLI
+  - du
+  - sort
+  - head
+---
+
+= ストレージ容量を圧迫しているディレクトリを探す
+
+サーバのストレージ容量が圧迫されいることがわかったが、どのディレクトリが圧迫しているかわからない。
+
+== 対応
+
+以下のコマンドを実行し、ディレクトリの容量順にTop10件を表示させる
+
+[source,sh]
+----
+du -h -d 1 | sort -rh | head -n 10
+----
+
+=== du
+
+使用量の表示
+
+-h:: サイズに応じて読みやすい単位で表示
+-d:: 集計するディレクトリの深さを指定
+
+=== sort
+
+ソート
+
+-h:: 人が読むことのできる形式の数値で並べ替える（例：2K、1Gなど）
+-r:: 逆順で並べ替える
+
+=== head
+
+先頭を表示
+
+-n:: 	先頭から指定した行数のみ表示
+
+== 参考
+
+* https://atmarkit.itmedia.co.jp/ait/articles/1610/25/news016.html[【 du 】コマンド――ディスクの使用量を表示する]
+* https://atmarkit.itmedia.co.jp/ait/articles/1611/09/news020.html[【 sort 】コマンド――テキストファイルを行単位で並べ替える]
+* https://qiita.com/yugo-yamamoto/items/18939d7cc382b518572b[du -h -d 1 | sort -h が優勝]
+* https://atmarkit.itmedia.co.jp/ait/articles/1603/07/news023.html[【 head 】コマンド／【 tail 】コマンド――長いメッセージやテキストファイルの先頭だけ／末尾だけを表示する]
