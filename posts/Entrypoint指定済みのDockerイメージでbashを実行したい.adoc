@@ -1,0 +1,29 @@
+---
+title: Entrypoint指定済みのDockerイメージでbashを実行したい
+date: 2021-12-19T22:12:00+09:00
+draft: false
+categories:
+  - OSS
+  - Git
+tags:
+  - Git
+---
+
+= Entrypoint指定済みのDockerイメージでbashを実行したい
+
+Entrypoint指定済みのDockerイメージに対して `docker run -it ${IMAGE_NAME} /bin/bash` したい。
+
+Entrypointが指定されている場合のコマンド指定はEntrypointの引数として実行されるため、bashが実行できなかった。
+
+== 対応
+
+Entrypointを上書きして実行する
+
+[source,sh]
+----
+docker run -it --entrypoint='/bin/bash' ${IMAGE_NAME}
+----
+
+== 参考
+
+* https://docs.docker.jp/engine/reference/run.html[Docker run リファレンス]
