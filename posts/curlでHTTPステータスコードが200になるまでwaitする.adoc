@@ -1,0 +1,37 @@
+---
+title: curlでHTTPステータスコードが200になるまでwaitする
+date: 2022-02-19T15:49:00+09:00
+draft: false
+tags:
+  - Linux
+  - CLI
+  - curl
+  - timeout
+  - sleep
+---
+
+= curlでHTTPステータスが200になるまでwaitする
+
+curlを使用してHTTPステータスコードが200になるまで待ちたい
+
+== 対応
+
+以下のコードで5秒間隔でHTTPステータスが200になるまで待ち、30秒経過した場合はタイムアウトする。
+
+[source,sh]
+----
+CHECK_URL=www.google.co.jp
+timeout 30 bash -c "while [[ "$(curl -s -o /dev/null -w '%{http_code}' ${CHECK_URL})" != '200' ]]; do sleep 5; done"
+----
+
+== curl
+
+サーバーとの間でデータを転送するためのツール
+
+-s:: メッセージの非表示
+-o:: 出力先
+-w:: フォーマットを指定して出力
+
+== 参考
+
+https://man7.org/linux/man-pages/man1/curl.1.html[curl(1) — Linux manual page]
