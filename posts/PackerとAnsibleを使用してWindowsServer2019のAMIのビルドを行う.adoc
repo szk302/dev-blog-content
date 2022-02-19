@@ -1,0 +1,138 @@
+---
+title: PackerとAnsibleを使用してWindowsServer2019のAMIのビルドを行う
+date: 2022-02-19T22:58:00+09:00
+draft: false
+tags:
+  - Packer
+  - Ansible
+---
+
+= PackerとAnsibleを使用してWindowsServer2019のAMIのビルドを行う
+
+意外とWindowsのEC2を使用することが多いため、簡単にAMIを作成できるようにしておきたい
+
+== 環境
+
+* Ansible: 5.3.0
+* Packer: 1.7.10
+
+今回は以下のDockerfileを使用しコンテナ内で実行した
+
+.Dockerfile
+[source,docker]
+----
+FROM alpine:3.15.0
+ARG ANSIBLE_VERSION="5.3.0"
+## Install Ansible
+RUN apk --no-cache add python3 py3-pip openssl ca-certificates && \
+    apk --no-cache add --virtual build-dependencies \
+                        python3-dev libffi-dev openssl-dev build-base && \
+    pip3 install --upgrade pip cffi && \
+    pip3 install --upgrade pywinrm "ansible==${ANSIBLE_VERSION}" && \
+    apk del build-dependencies && \
+    rm -rf /var/cache/apk/*
+
+## Install Packer
+ARG PACKER_VERSION="1.7.10"
+ENV PACKER_ZIP_URL "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip"
+RUN apk --no-cache add --virtual install-dependencies \
+                        curl libarchive-tools && \
+    curl -L "${PACKER_ZIP_URL}" | bsdtar xvf - -C /usr/sbin && \
+    chmod +x /usr/sbin/packer && \
+    apk del install-dependencies && \
+    rm -rf /var/cache/apk/*
+----
+
+== 方法
+
+以下3つのファイルを用意する
+
+* packer.json
+* userdata.txt
+* chrome/install.yml
+
+.packer.json
+[source,json]
+----
+{
+  "variables": {
+    "PROFILE": "default"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "profile": "{{user `PROFILE`}}",
+      "region": "ap-northeast-1",
+      "source_ami_filter": {
+        "filters": {
+          "name": "Windows_Server-2019-Japanese-Full-Base*"
+        },
+        "owners": [
+          "801119661308"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "t3.micro",
+      "ami_name": "windows-server-2019-{{isotime | clean_resource_name}}",
+      "user_data_file": "{{template_dir}}/userdata.txt",
+      "tags": {
+        "Base_AMI_ID": "{{ .SourceAMI }}",
+        "Base_AMI_NAME": "{{ .SourceAMIName }}"
+      },
+      "communicator": "winrm",
+      "winrm_use_ssl": "true",
+      "winrm_insecure": "true",
+      "winrm_username": "Administrator"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "{{template_dir}}/chrome/install.yml",
+      "user": "Administrator",
+      "use_proxy": false,
+      "extra_arguments": [
+        "-e",
+        "ansible_winrm_server_cert_validation=ignore"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule",
+        "C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/SysprepInstance.ps1 -NoShutdown"
+      ]
+    }
+  ]
+}
+----
+
+.userdata.txt
+[source,xml]
+----
+<powershell>
+$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+powershell.exe -ExecutionPolicy ByPass -File $file
+</powershell>
+----
+
+.chrome/install.yml
+[source,yml]
+----
+---
+- hosts: all
+  tasks:
+  - name: Install chrome
+    win_shell: '$Path = $env:TEMP; $Installer = "chrome_installer.exe"; Invoke-WebRequest "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26browser%3D0%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26brand%3DGTPM/update2/installers/ChromeSetup.exe" -OutFile $Path\$Installer; Start-Process -FilePath $Path\$Installer -Args "/silent /install" -Verb RunAs -Wait; Remove-Item $Path\$Installer'
+----
+
+=== 動作
+
+AWSの認証情報を環境変数に設定し以下のコマンドを実行する
+
+[source,sh]
+----
+packer build packer.json
+----
