@@ -140,6 +140,7 @@ packer build packer.json
 == 参考
 
 * https://www.packer.io/plugins/builders/amazon/ebs[AMI Builder (EBS backed)]
+* https://www.packer.io/plugins/provisioners/ansible/ansible[Ansible Provisioner]
+* https://docs.ansible.com/ansible/2.9_ja/user_guide/windows_setup.html#id3[Windows ホストのセットアップ]
 * https://yetiops.net/posts/packer-ansible-windows-aws/[Building Windows AWS AMIs using Packer and Ansible]
 * https://dev.classmethod.jp/articles/packer-build-winsrv2019-ad/[PackerでWindows Server 2019のAMIを作ってみた]
-* https://docs.ansible.com/ansible/2.9_ja/user_guide/windows_setup.html#id3[Windows ホストのセットアップ]
