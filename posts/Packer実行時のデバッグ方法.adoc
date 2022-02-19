@@ -1,0 +1,25 @@
+---
+title: Packer実行時のデバッグ方法
+date: 2022-02-19T23:09:00+09:00
+draft: false
+tags:
+  - Packer
+---
+
+= Packer実行時のデバッグ方法
+
+Packerのデバッグ方法を調査した
+
+== 方法
+
+環境変数に以下の値を設定
+
+* PACKER_LOG=1
+* PACKER_LOG_PATH=packer.log
+
+packer build -debug 定義ファイル
+
+== 参考
+
+* https://www.packer.io/docs/debugging[Debugging Packer Builds]
+
