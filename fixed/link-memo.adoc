@@ -21,6 +21,9 @@ tags:
 
 * https://docs.github.com/ja/actions/managing-workflow-runs/downloading-workflow-artifacts[ワークフローの成果物をダウンロードする]
 
+== Ansible
+
+* https://docs.ansible.com/ansible/2.9/modules/list_of_windows_modules.html[Windows modules]
 
 == Powershell
 
