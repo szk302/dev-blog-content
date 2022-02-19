@@ -1,0 +1,42 @@
+---
+title: Tomcatのログの種類
+date: 2022-02-19T09:20:00+09:00
+draft: false
+tags:
+  - Tomcat
+---
+
+= Tomcatのログの種類
+
+どれがなんのログなのかわからないため調べた。
+
+Tomcatはデフォルトで以下のログを出力している。
+
+catalina.out:: 
+* コンソール出力と同じ(標準出力/標準エラー出力)
+* 設定箇所: catalina.sh
+catalina.yyyy-MM-dd.log::
+* Tomcatのログ
+* 設定箇所: logging.properties
+localhost_access_log.yyyy-MM-dd.txt:: 
+* アクセスログ
+* 設定箇所: server.xml
+localhost.yyyy-MM-dd.log::
+* ウェブアプリケーションのログ(ServletContext.log)
+* 設定箇所: logging.properties
+host-manager.yyyy-MM-dd.log::
+* host-managerのログ
+* 設定箇所: logging.properties
+manager.yyyy-MM-dd.log:: managerのログ
+* managerのログ
+* 設定箇所: logging.properties
+
+== 環境
+
+* Tomcat: 9.0.58
+
+== 参考
+
+* https://tomcat.apache.org/tomcat-9.0-doc/logging.html[Logging in Tomcat]
+* https://qiita.com/hidekatsu-izuno/items/ab604b6c764b5b5a86ed[Tomcat の初期設定まとめ]
+* https://doc.support-dreamarts.com/Luxor/V24/Luxor_Ver.2.4_%E9%81%8B%E7%94%A8%E3%82%AC%E3%82%A4%E3%83%89/luxor_log_guide/index.html[Luxorサーバに出力されるログ]
