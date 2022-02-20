@@ -1,0 +1,36 @@
+---
+title: VSCodeのインストーラのリンク
+date: 2022-02-21T00:00:00+00:00
+draft: false
+tags:
+  - Visual Studio Code
+  - VSCode
+---
+
+= VSCodeのインストーラのリンク
+
+VSCodeをスクリプトでインストールしたいがDownloadURLがわからないため調べた
+
+Systemインストーラは以下のURLでダウンロードできる。VERSIONにlatestを入れると最新版を落とせる
+
+* https://update.code.visualstudio.com/${VERSION}/win32-x64/stable
+
+== v1.64.2
+
+[source,sh]
+----
+VERSION=1.64.1
+curl -sL -O -J https://update.code.visualstudio.com/${VERSION}/win32-x64/stable
+----
+
+== 最新版
+
+[source,sh]
+----
+VERSION=latest
+curl -sL -O -J https://update.code.visualstudio.com/${VERSION}/win32-x64/stable
+----
+
+== 参考
+
+* https://code.visualstudio.com/docs/supporting/faq#_previous-release-versions[Visual Studio Code FAQ/Previous release versions]
