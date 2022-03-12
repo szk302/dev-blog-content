@@ -1,0 +1,171 @@
+---
+title: CloudFormationのテンプレートコーディングをVSCodeのRemoteDevelopmentを利用してコンテナ内で行う
+date: 2022-03-12T13:08:00+09:00
+draft: false
+categories:
+  - Development
+tags:
+  - Visual Studio Code
+  - VSCode
+  - AWS CloudFormation
+---
+
+= CloudFormationのテンプレートコーディングをVSCodeのRemoteDevelopmentを利用してコンテナ内で行う
+
+Windows環境で直接開発すると文字コードの問題などがあるのでVSCodeのRemoteDevelopmentを使用して開発したい。
+
+== 準備
+
+* VSCodeの拡張 RemoteDevelopment(ms-vscode-remote.vscode-remote-extensionpack)を入れておく
+* WSL2などでDockerが使用できる状態にしておく
+
+== 方法
+
+. Cfテンプレート開発を行うディレクトリに *.devcontainer* ディレクトリを作成し、以下のファイルを作成
+** Dockerfile: 開発環境のDockerfile
+** docker-compose.yml: 開発環境を起動するためのdocker-compose
+** devcontainer.json: vscodeの設定
+. F1を押しコマンド入力で *Remote-Containers: Open Workspace in Container* を指定する
+
+== ディレクトリ構成
+
+.ディレクトリ構成
+[source,txt]
+----
+.
+├── .devcontainer
+│   ├── Dockerfile
+│   ├── devcontainer.json
+│   └── docker-compose.yml
+├── .gitignore
+├── templates
+│   ├── Cf-base
+│   └── Cf-network.yml
+└── Cf-main.yml
+----
+
+=== Dockerfile
+
+開発環境で使用する(開発環境そのもの)Dockerfile +
+vscodeの拡張で使用するためcf-lintや実際にCfテンプレートを実行するためにAWSCLIをインストールしている。 +
+また、AWSCLIで使用するクレデンシャル情報を環境変数から読み込むためdirenvをインストールする。
+
+.Dockerfile
+[source,docker]
+----
+FROM python:3.11.0a5-slim-bullseye
+# cfn-lintのインストール
+RUN pip install cfn-lint
+RUN apt update -y && \
+    apt install -y curl unzip
+# direnvのインストール
+RUN curl -sfL https://direnv.net/install.sh | bash
+RUN echo 'eval "$(direnv hook bash)"' >> /root/.bashrc
+# aws cliのインストール
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
+----
+
+=== docker-compose.yml
+
+Dockerfileで作成するコンテナイメージを起動するための設定ファイルであるdocker-compose.yml +
+`.devcontainer.json`でこのdocker-compose.ymlを指定することでVSCodeがDockerfileをビルドして起動し実行してくれる
+
+.docker-compose.yml
+[source,yml]
+----
+version: "3"
+
+services:
+  aws-cf-workspace:
+    build: .
+    tty: true
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: "../"
+        target: "/workspace"
+----
+
+=== devcontainer.json
+
+RemoteDevelopmentの設定ファイル +
+以下の拡張をインストールするよう指定している。また、拡張の設定も記述している
+
+* YAML(redhat.vscode-yaml)
+* CloudFormation Linter(kddejong.vscode-cfn-lint)
+* indent-rainbow(oderwat.indent-rainbow)
+* CloudFormation support for Visual Studio Code(aws-scripting-guy.cform)
+* Prettier - Code formatter(esbenp.prettier-vscode)
+
+
+.devcontainer.json
+[source,yml]
+----
+{
+  "name": "cf-work",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "aws-cf-workspace",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "[yaml]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2,
+      "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+      },
+      "editor.autoIndent": "none"
+    },
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 2,
+    "editor.autoIndent": "none",
+    "yaml.format.enable": true,
+    "yaml.trace.server": "verbose",
+    "yaml.customTags": [
+      "!And",
+      "!If",
+      "!Not",
+      "!Equals",
+      "!Or",
+      "!FindInMap",
+      "!Base64",
+      "!Cidr",
+      "!Ref",
+      "!Sub",
+      "!GetAtt",
+      "!GetAZs",
+      "!ImportValue",
+      "!Select",
+      "!Split",
+      "!Join"
+    ],
+    "json.schemas": [
+      {
+        "fileMatch": ["Cf-*.json"],
+        "url": "https://s3.amazonaws.com/cfn-resource-specifications-us-east-1-prod/schemas/2.15.0/all-spec.json"
+      }
+    ],
+    "yaml.schemas": {
+      "https://s3.amazonaws.com/cfn-resource-specifications-us-east-1-prod/schemas/2.15.0/all-spec.json": "Cf-*.yaml"
+    }
+  },
+  "extensions": [
+    "redhat.vscode-yaml",
+    "kddejong.vscode-cfn-lint",
+    "oderwat.indent-rainbow",
+    "aws-scripting-guy.cform",
+    "esbenp.prettier-vscode"
+  ],
+  "shutdownAction": "stopCompose"
+}
+----
+
+== 参考
+
+* https://github.com/aws-cloudformation/cfn-lint[aws-cloudformation/cfn-lint]
+* https://github.com/aws-scripting-guy/cform-VSCode[aws-scripting-guy/cform-VSCode]
+* https://dev.classmethod.jp/articles/20211008-vscode-extention-settings/[VS Code拡張機能を追加してCloudFormation開発環境をレベルアップする] 
+
