@@ -1,0 +1,31 @@
+---
+title: PowershellでTCP接続できるまで待つ
+date: 2022-03-16T08:42:00+09:00
+draft: false
+categories:
+  - Tools
+tags:
+  - PowerShell
+---
+
+= PowershellでTCP接続できるまで待つ
+
+PowershellでTCP接続可能になるまで待ちたい
+
+.wait.ps1
+[source,ps1]
+----
+$dstHost = 'szk302.dev'
+$dstPort = 443
+$maxRetryCount = 2
+$count = 0
+
+while (-not (Test-NetConnection -ComputerName $dstHost -Port $dstPort -InformationLevel Quiet) -and ($count -lt $maxRetryCount)) {
+    Write-Host "Retry NetConnection"
+    $count+=1
+}
+----
+
+== 参考
+
+* https://stackoverflow.com/questions/22430326/loop-until-ipport-is-responding[loop until IP:port is responding] 
