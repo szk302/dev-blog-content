@@ -1,0 +1,31 @@
+---
+title: シェルスクリプトで実行したコマンド実行時間(ms)を計測する
+date: 2022-04-05T07:07:00+09:00
+draft: false
+tags:
+  - Bash
+---
+
+= シェルスクリプトで実行したコマンド実行時間(ms)を計測する
+
+コマンド呼び出しにかかった時間を計測したい
+
+../time.sh
+[source,sh]
+----
+include::./time.sh[]
+----
+
+== 結果
+
+.console
+[source,bash]
+----
+elapsedTime(ms):1109
+elapsedTime(s):1.109
+----
+
+== 参考
+
+* https://www.gnu.org/software/coreutils/manual/html_node/Time-conversion-specifiers.html[21.1.1 Time conversion specifiers]
+* https://qiita.com/niwasawa/items/9502e97b6c4d28d24042[date コマンドで日時のミリ秒単位まで表示する]
