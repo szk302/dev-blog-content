@@ -28,3 +28,7 @@ tags:
 == Powershell
 
 * https://qiita.com/watahani/items/3cb6a9d00d5dc1e2ba73[Wi-Fiのパスワードを表示するワンライナー]
+
+== AWS
+
+* https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-arns-and-namespaces.html[Amazon リソースネーム (ARN)]
