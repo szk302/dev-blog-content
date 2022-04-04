@@ -1,0 +1,36 @@
+---
+title: curlでレスポンスのHTTPステータスとbodyを取得する
+date: 2022-02-19T15:49:00+09:00
+draft: false
+tags:
+  - Linux
+  - CLI
+  - curl
+---
+
+= curlでレスポンスのHTTPステータスとbodyを取得する
+
+curlで実行時のレスポンスHTTPステータスとBodyを取得したい
+
+== 方法
+
+./get_https-status_body.sh
+[source,bash]
+----
+include::./get_https-status_body.sh[]
+----
+
+== 結果
+
+.console
+----
+status: 200
+body: <!doctype html><html lang=ja dir=auto><head><meta name=generator content="Hugo 0.80.0">...省略</html>
+----
+
+== 参考
+
+* https://curl.se/docs/manual.html[curl / Docs / Tool / Manual]
+* https://qiita.com/unsoluble_sugar/items/9b78fd7e4e77c6e00f02[curlでヘッダ情報やHTTPステータスコードのみを出力する方法]
+* https://teratail.com/questions/235468[curlのレスポンスで、status_codeとbodyのみを取得したい]
+* https://qiita.com/t_nakayama0714/items/80b4c94de43643f4be51[【シェル芸人への道】Bashの変数展開と真摯に向き合う]
