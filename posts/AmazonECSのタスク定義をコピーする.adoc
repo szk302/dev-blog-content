@@ -1,0 +1,33 @@
+---
+title: AmazonECSのタスク定義をコピーする
+date: 2022-04-10T14:21:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Amazon ECS
+  - task definition
+---
+
+= AmazonECSのタスク定義をコピーする
+
+AmazonECSのタスク定義をコピーして別のタスク定義を作成したい。 +
+CLIからタスク定義を取得し、別のタスク定義として保存する
+
+== 方法
+
+AWS CLIでタスク定義を取得し、登録できる形に変形させCLIから登録する。
+
+.cmd
+[source,cmd]
+----
+aws ecs describe-task-definition --task-definition sample-task-definition | jq '.taskDefinition | del (.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' > task-def.json
+aws ecs register-task-definition --family szk302-task-definition --cli-input-json file://task-def.json
+----
+
+
+== 参考
+
+* https://dev.classmethod.jp/articles/describe-task-definition-to-register-task-definition/[describe-task-definitionで取得したJSONはそのままではregister-task-definitionで登録できないお話]
+* https://blog.msysh.me/posts/2020/12/transform_task_definition_by_describe_to_be_able_to_register.html[describe で出力した ECS タスク定義をさくっと登録可能な形に整形する]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ecs/register-task-definition.html[register-task-definition]
