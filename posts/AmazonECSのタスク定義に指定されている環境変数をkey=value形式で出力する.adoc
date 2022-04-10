@@ -1,0 +1,24 @@
+---
+title: AmazonECSのタスク定義に指定されている環境変数をkey=value形式で出力する
+date: 2022-04-10T14:21:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Amazon ECS
+  - task definition
+---
+
+= AmazonECSのタスク定義に指定されている環境変数をkey=value形式で出力する
+
+AmazonECSのタスク定義に指定されている環境変数をkey=value形式で出力したい
+
+== 方法
+
+AWS CLIとjqを使用して加工する
+
+.cmd
+[source,cmd]
+----
+aws ecs describe-task-definition --task-definition タスク定義名 | jq -r ".taskDefinition.containerDefinitions[0].environment | map(\"\(.name)=\(.value)\") | .[]"
+----
