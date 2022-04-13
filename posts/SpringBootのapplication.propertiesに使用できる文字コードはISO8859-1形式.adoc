@@ -1,0 +1,22 @@
+---
+title: SpringBootのapplication.propertiesに使用できる文字コードはISO8859-1形式
+date: 2022-04-13T22:07:00+09:00
+draft: false
+tags:
+  - Gradle
+  - SpringBoot
+---
+
+= SpringBootのapplication.propertiesに使用できる文字コードはISO8859-1形式
+
+application.propertiesに日本語文字列を定義していて、プレースホルダーで環境変数から取得するようにしたらエラーになったのでメモ
+
+application.propertiesはjavaのプロパティファイルであり使用できる文字コードはISO8859-1形式、そのためマルチバイト文字はUnicodeエスケープする必要がある。 +
+一方、プレースホルダーで環境変数から値を取得する場合はプロパティファイルから取得しているわけではないので、Unicodeエスケープする必要がなかった。
+
+== 参考
+
+* https://ja.stackoverflow.com/questions/27787/eclipse%E3%81%A7application-properties%E3%81%AE%E5%80%A4%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E5%8C%96%E3%81%91%E3%81%99%E3%82%8B[Eclipseでapplication.propertiesの値を取得すると文字化けする]
+* https://github.com/spring-projects/spring-boot/pull/10565[Read application.properties using ISO 8859-1 #10565]
+* https://docs.oracle.com/javase/jp/12/docs/api/java.base/java/util/Properties.html#load(java.io.InputStream)[クラスProperties.load(java.io.InputStream)]
+
