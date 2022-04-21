@@ -1,0 +1,44 @@
+---
+title: PowerShellでFargateコンテナ内のbashを実行する
+date: 2022-04-22T08:33:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Amazon ECS
+  - PowerShell 
+---
+
+= PowerShellでFargateコンテナ内のbashを実行する
+
+PowerShellからAWS CLIを使用してタスクIDを取得し、ECSExecを使用してbashを実行する
+
+== 前提条件
+
+* 1サービス1コンテナを想定
+
+== 方法
+
+AWSCLIを使用してクラスター名からタスクARNを取得し、タスクARNからタスクIDを取得、コンテナ名は1タスクに複数いないのでタスクARNから引っ張る。
+
+[source,ps1]
+----
+$CLUSTER_NAME="my-cluster"
+$SERVICE_NAME="my-service"
+$json=(aws ecs list-tasks --cluster "${CLUSTER_NAME}" --service-name "${SERVICE_NAME}") | ConvertFrom-Json
+$taskArn=$json.taskArns[0]
+$json=(aws ecs describe-tasks --cluster "${CLUSTER_NAME}" --tasks "${taskArn}") | ConvertFrom-Json
+$containerName=$json.tasks[0].containers[0].name
+$taskId=($taskArn -split '/')[-1]
+
+echo "------------------------------"
+echo "clusterName: ${CLUSTER_NAME}"
+echo "serviceName: ${SERVICE_NAME}"
+echo "taskArn: ${taskARN}"
+echo "taskId: ${taskId}"
+echo "containerName: ${containerName}"
+echo "------------------------------"
+
+chcp 65001
+aws ecs execute-command --cluster "${CLUSTER_NAME}" --task ${taskId} --container "${containerName}" --interactive --command "/bin/bash"
+----
