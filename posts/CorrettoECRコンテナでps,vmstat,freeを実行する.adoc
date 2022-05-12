@@ -1,0 +1,43 @@
+---
+title: CorrettoECRコンテナ内でps,vmstat,freeを実行する
+date: 2022-05-13T08:38:00+09:00
+draft: false
+tags:
+  - Procps
+  - free
+  - kill
+  - pgrep
+  - pkill
+  - pmap
+  - ps
+  - pwdx
+  - skill
+  - slabtop
+  - snice
+  - sysctl
+  - tload
+  - top
+  - uptime
+  - vmstat
+  - w
+  - watch
+---
+
+= CorrettoECRコンテナ内でps,vmstat,freeを実行する
+
+コンテナ内からメモリ使用率を確認したかったが必要なコマンドが存在しなかったため、インストール
+
+== 対応
+
+Dockerfileに以下を追記
+
+[source,Docker]
+----
+RUN yum install -y procps
+----
+
+== 参考
+
+* https://linuxjf.osdn.jp/JFdocs/LFS-BOOK/chapter06/procps.html[6.30. Procps-3.2.8]
+* https://docs.aws.amazon.com/ja_jp/corretto/latest/corretto-11-ug/docker-install.html[Corretto ECR インスタンスを使用する]
+
