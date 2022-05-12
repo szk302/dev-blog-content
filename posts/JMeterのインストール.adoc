@@ -1,0 +1,37 @@
+---
+title: JMeterのインストール
+date: 2022-05-13T07:48:00+09:00
+draft: false
+tags:
+  - Java
+  - Apache JMeter
+---
+
+= JMeterのインストール
+
+JMeterをインストールして日本語化する
+
+== 環境
+
+OS:: Microsoft Windows 10
+JAVA:: openjdk 11.0.15 2022-04-19 LTS
+
+== インストール
+
+以下のページからJMeterをダウンロード(今回はapache-jmeter-5.4.3.zip)して任意のディレクトリに解凍 +
+* https://jmeter.apache.org/download_jmeter.cgi[Download Apache JMeter]
+
+binのディレクトリにsetenv.batを作成
+
+.setenv.bat
+[source,bat]
+----
+set JMETER_LANGUAGE=-Duser.language="ja" -Duser.region="JP"
+----
+
+jmeter.batを実行するとGUIが日本語で表示された。
+
+== 参考
+
+* https://jmeter.apache.org/download_jmeter.cgi[Download Apache JMeter]
+* https://jmeter.apache.org/usermanual/get-started.html[1.4 Running JMeter]
