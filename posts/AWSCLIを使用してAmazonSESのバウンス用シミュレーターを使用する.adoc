@@ -1,0 +1,27 @@
+---
+title: AWSCLIを使用してAmazonSESのバウンス用シミュレーターを使用する
+date: 2022-05-26T08:17:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Amazon SES
+  - SES
+---
+
+= AWSCLIを使用してAmazonSESのバウンス用シミュレーターを使用する
+
+メールのバウンス処理をテストする必要があったのでメモ
+
+AWS CLIを使用してバウンスをシミュレートするメールアドレスに対してメールを送信する
+
+[source,bash]
+----
+fromMailAddress=sample@szk302.dev
+aws ses send-email --to bounce@simulator.amazonses.com --from ${fromMailAddress} --subject sample --text "sample body"
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/ja_jp/ses/latest/dg/send-an-email-from-console.html[シミュレーターを使用した Amazon SES でのテストメール送信]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ses/send-email.html#send-email[send-email]
