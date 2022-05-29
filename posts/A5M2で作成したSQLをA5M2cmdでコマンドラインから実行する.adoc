@@ -1,0 +1,53 @@
+---
+title: A5M2で作成したSQLをA5M2cmdでコマンドラインから実行する
+date: 2022-05-30T08:14:00+09:00
+draft: false
+tags:
+  - A5:SQL Mk-2
+  - A5M2
+  - A5:SQL Mk-2 コマンドラインユーティリティ
+  - A5M2cmd
+  - PostgreSQL
+---
+
+= A5M2で作成したSQLをA5M2cmdでコマンドラインから実行する
+
+A5M2で生成されたSQLをコマンドラインから実行する。 +
+実行方法はコマンドラインツールのzipを解凍すると一緒に入っている**a5m2cmd.ja.txt**に記載されていた。
+
+== 環境
+
+=== コマンド実行環境
+
+* Microsoft WIndows Server 2019 Datacentor
+
+=== DB
+
+* Amazon RDS Aurora PostgreSQL(11.15)
+
+== 方法
+
+以下のように実行
+
+[source,cmd]
+----
+A5M2cmd "/Connect=__ConnectionType=Internal;ProviderName=PostgreSQL;UserName=${user_name};Password=${user_pass};ServerName=${db_endpoint};Port=${db_port};Database=${db_name};ProtocolVersion=30" /RunSQL /InEncoding=UTF-8 "/FileName=${sql_file_path}" 
+----
+
+セパレータを変えている場合はオプションで指定する。  +
+トリガー用のSQLファイルに */* が指定されていた。
+
+[source,cmd]
+----
+A5M2cmd "/Connect=__ConnectionType=Internal;ProviderName=PostgreSQL;UserName=${user_name};Password=${user_pass};ServerName=${db_endpoint};Port=${db_port};Database=${db_name};ProtocolVersion=30" /RunSQL /Separator=Slash /InEncoding=UTF-8 "/FileName=${sql_file_path}"
+----
+
+== TODO
+
+プロシージャ用のSQLファイルは実行できなかった。  時間切れのため未調査
+
+== 参考
+
+* https://www.vector.co.jp/soft/winnt/util/se519353.html[A5:SQL Mk-2 コマンドラインユーティリティ]
+* https://a5m2.mmatsubara.com/help/SQLEditor/runSql.ado.html[SQLの実行モード（実行位置）の設定]
+
