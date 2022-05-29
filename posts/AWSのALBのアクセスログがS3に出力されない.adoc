@@ -1,0 +1,51 @@
+---
+title: AWSのALBのアクセスログがS3に出力されない
+date: 2022-05-29T10:01:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS Application Load Balancer
+  - ALB
+  - S3
+---
+
+= AWSのALBのアクセスログがS3に出力されない
+
+S3のポリシー見直しをしていたところ、ALBのログがS3に出力されなくなった。 +
+ALBのログ出力に指定するバケットのポリシーのPrincipalに自分のアカウントIDを指定していたことが原因。
+
+ALBからのログ出力に指定するアカウントIDは以下の通り
+
+* ap-northeast-1: 582318560864
+* ap-northeast-3: 383597477331
+
+.バケットポリシー(東京リージョン)
+[source,json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::582318560864:root"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${バケット名}/prefix/AWSLogs/${アカウントID}/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "logdelivery.elb.amazonaws.com"
+      },
+      "Action": "s3:GetBucketAcl",
+      "Resource": "arn:aws:s3:::${バケット名}"
+    }
+  ]
+}
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-access-logs.html[Application Load Balancer のアクセスログ]
+ 
