@@ -39,5 +39,6 @@ tags:
 
 == AWS
 
+* https://gallery.ecr.aws/?page=1[Amazon ECR Public Gallery]
 * https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-arns-and-namespaces.html[Amazon リソースネーム (ARN)]
 * https://gist.github.com/shortjared/4c1e3fe52bdfa47522cfe5b41e5d6f22[shortjared/list.txt/List of AWS Service Principals]
