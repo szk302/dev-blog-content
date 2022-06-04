@@ -1,0 +1,25 @@
+---
+title: WindowsにPowerShellでVSCodeをサイレントインストールする
+date: 2022-06-05T08:49:00+09:00
+draft: false
+tags:
+  - Visual Studio Code
+  - VSCode
+  - Windows
+  - PowerShell
+---
+
+= WindowsにPowerShellでVSCodeをサイレントインストールする
+
+chocolateyやwingetが使用禁止のためpowershellでインストールする
+
+.install_vscode.ps1
+[source,ps1]
+----
+include::./install_vscode.ps1[]
+----
+
+== 参考
+
+* https://silentinstallhq.com/visual-studio-code-silent-install-how-to-guide/[Visual Studio Code Silent Install (How-To Guide)]
+* https://zenn.dev/nuits_jp/articles/silent-installation-of-vs-code[Visual Studio Codeのサイレントインストール]
