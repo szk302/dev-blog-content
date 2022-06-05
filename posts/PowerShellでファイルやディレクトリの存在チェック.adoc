@@ -28,6 +28,18 @@ if((Test-Path $file_path) -ne "True") {
 };
 ----
 
+.存在しないか確認(not論理演算子Ver)
+[source,ps1]
+----
+$file_path = "test.txt";
+if(-not (Test-Path $file_path)) {
+  echo "存在しない";
+};
+----
+
+
+
 == 参考
 
 * https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-path?view=powershell-7.2[Test-Path]
+* https://docs.microsoft.com/ja-jp/powershell/scripting/learn/deep-dives/everything-about-if?view=powershell-7.2[https://docs.microsoft.com/ja-jp/powershell/scripting/learn/deep-dives/everything-about-if?view=powershell-7.2#-not]
