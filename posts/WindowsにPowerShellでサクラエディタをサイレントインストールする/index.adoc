@@ -1,7 +1,23 @@
+---
+title: WindowsにPowerShellでサクラエディタをサイレントインストールする
+date: 2022-06-05T09:07:00+09:00
+draft: false
+tags:
+  - サクラエディタ
+  - Windows
+  - PowerShell
+---
+
 = WindowsにPowershellでサクラエディタをサイレントインストールする
 
 chocolateyやwingetが使用禁止のためpowershellでインストールする
 
+.install_sakura.ps1
+[source,ps1]
+----
+include::./install_sakura.ps1[]
+----
+
 == 参考
 
-* https://sakura-editor.github.io/bbslog/sf/ansi/5743.html[[5743] サイレントインストールについて]
+* https://sakura-editor.github.io/bbslog/sf/ansi/5743.html[[5743\] サイレントインストールについて]
