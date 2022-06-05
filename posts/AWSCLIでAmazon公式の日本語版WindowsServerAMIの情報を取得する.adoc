@@ -1,0 +1,184 @@
+---
+title: AWSCLIでAmazon公式の日本語版WindowsServerAMIの情報を取得する
+date: 2022-06-05T16:23:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Windows
+  - AMI
+  - Amazon マシンイメージ (AMI)
+  - Amazon Machine Image
+---
+
+= AWSCLIでAmazon公式の日本語版WindowsServerAMIの情報を取得する
+
+いつも日本語版AMIを探し回るのでメモ
+
+== 方法
+
+フィルター部分のOSのバージョン(年)を変えれば対象バージョンの最新のAMIが取得できる
+
+.cmd
+[source,cmd]
+----
+aws ec2 describe-images --region ap-northeast-1  --owners amazon --query "reverse(sort_by(Images, &CreationDate))[:1]" --filters "Name=name,Values=Windows_Server-2022-*Japanese*Base*" --output json
+----
+
+.console
+[source,console]
+----
+[
+    {
+        "Architecture": "x86_64",
+        "CreationDate": "2022-05-25T06:11:35.000Z",
+        "ImageId": "ami-0672428f1d276c81d",
+        "ImageLocation": "amazon/Windows_Server-2022-Japanese-Full-Base-2022.05.25",
+        "ImageType": "machine",
+        "Public": true,
+        "OwnerId": "801119661308",
+        "Platform": "windows",
+        "PlatformDetails": "Windows",
+        "UsageOperation": "RunInstances:0002",
+        "State": "available",
+        "BlockDeviceMappings": [
+            {
+                "DeviceName": "/dev/sda1",
+                "Ebs": {
+                    "DeleteOnTermination": true,
+                    "SnapshotId": "snap-030270ea0f06d1e8e",
+                    "VolumeSize": 30,
+                    "VolumeType": "gp2",
+                    "Encrypted": false
+                }
+            },
+            {
+                "DeviceName": "xvdca",
+                "VirtualName": "ephemeral0"
+            },
+            {
+                "DeviceName": "xvdcb",
+                "VirtualName": "ephemeral1"
+            },
+            {
+                "DeviceName": "xvdcc",
+                "VirtualName": "ephemeral2"
+            },
+            {
+                "DeviceName": "xvdcd",
+                "VirtualName": "ephemeral3"
+            },
+            {
+                "DeviceName": "xvdce",
+                "VirtualName": "ephemeral4"
+            },
+            {
+                "DeviceName": "xvdcf",
+                "VirtualName": "ephemeral5"
+            },
+            {
+                "DeviceName": "xvdcg",
+                "VirtualName": "ephemeral6"
+            },
+            {
+                "DeviceName": "xvdch",
+                "VirtualName": "ephemeral7"
+            },
+            {
+                "DeviceName": "xvdci",
+                "VirtualName": "ephemeral8"
+            },
+            {
+                "DeviceName": "xvdcj",
+                "VirtualName": "ephemeral9"
+            },
+            {
+                "DeviceName": "xvdck",
+                "VirtualName": "ephemeral10"
+            },
+            {
+                "DeviceName": "xvdcl",
+                "VirtualName": "ephemeral11"
+            },
+            {
+                "DeviceName": "xvdcm",
+                "VirtualName": "ephemeral12"
+            },
+            {
+                "DeviceName": "xvdcn",
+                "VirtualName": "ephemeral13"
+            },
+            {
+                "DeviceName": "xvdco",
+                "VirtualName": "ephemeral14"
+            },
+            {
+                "DeviceName": "xvdcp",
+                "VirtualName": "ephemeral15"
+            },
+            {
+                "DeviceName": "xvdcq",
+                "VirtualName": "ephemeral16"
+            },
+            {
+                "DeviceName": "xvdcr",
+                "VirtualName": "ephemeral17"
+            },
+            {
+                "DeviceName": "xvdcs",
+                "VirtualName": "ephemeral18"
+            },
+            {
+                "DeviceName": "xvdct",
+                "VirtualName": "ephemeral19"
+            },
+            {
+                "DeviceName": "xvdcu",
+                "VirtualName": "ephemeral20"
+            },
+            {
+                "DeviceName": "xvdcv",
+                "VirtualName": "ephemeral21"
+            },
+            {
+                "DeviceName": "xvdcw",
+                "VirtualName": "ephemeral22"
+            },
+            {
+                "DeviceName": "xvdcx",
+                "VirtualName": "ephemeral23"
+            },
+            {
+                "DeviceName": "xvdcy",
+                "VirtualName": "ephemeral24"
+            },
+            {
+                "DeviceName": "xvdcz",
+                "VirtualName": "ephemeral25"
+            }
+        ],
+        "Description": "Microsoft Windows Server 2022 Full Locale Japanese AMI provided by Amazon",
+        "EnaSupport": true,
+        "Hypervisor": "xen",
+        "ImageOwnerAlias": "amazon",
+        "Name": "Windows_Server-2022-Japanese-Full-Base-2022.05.25",
+        "RootDeviceName": "/dev/sda1",
+        "RootDeviceType": "ebs",
+        "SriovNetSupport": "simple",
+        "VirtualizationType": "hvm",
+        "DeprecationTime": "2024-05-25T06:11:35.000Z"
+    }
+]
+----
+
+AMIのIDだけ取得
+
+.cmd
+[source,cmd]
+----
+aws ec2 describe-images --region ap-northeast-1 --owners amazon --query "reverse(sort_by(Images, &CreationDate))[:1]" --filters "Name=name,Values=Windows_Server-2022-*Japanese*Base*" --output json | jq -r ".[0].ImageId"
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-images.html[AWS CLI Command Reference/aws ec2/describe-images]
