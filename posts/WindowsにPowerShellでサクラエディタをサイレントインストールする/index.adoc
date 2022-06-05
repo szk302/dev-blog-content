@@ -1,0 +1,7 @@
+= WindowsにPowershellでサクラエディタをサイレントインストールする
+
+chocolateyやwingetが使用禁止のためpowershellでインストールする
+
+== 参考
+
+* https://sakura-editor.github.io/bbslog/sf/ansi/5743.html[[5743] サイレントインストールについて]
