@@ -1,0 +1,47 @@
+---
+title: PowerShellでファイルやフォルダを削除する
+date: 2022-06-05T16:50:00+09:00
+draft: false
+tags:
+  - PowerShell 
+  - Remove-Item
+  - rm -rf
+---
+
+= PowerShellでファイルやフォルダを削除する
+
+== 方法
+
+オプション *-Recurse*,*-Force* をつける
+
+-Recurse:: サブディレクトリごと削除
+-Force:: 隠しファイルや読み取り専用ファイルを削除
+
+[source,ps1]
+----
+Remove-Item xyz -Recurse -Force
+----
+
+ただし、ファイルやディレクトリが存在しない場合エラーになる。
+
+[source,ps1]
+----
+PS C:\Users\szk\work> Remove-item none -Recurse -Force
+Remove-Item : パス 'C:\Users\szk\work\none' が存在しないため検出できません。
+発生場所 行:1 文字:1
++ Remove-item none -Recurse -Force
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\szk\work\none:String) [Remove-Item], ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.RemoveItemCommand
+----
+
+エラーにさせない方法はif文で判定する方法しか見つけられなかった。
+
+[source,ps1]
+----
+$file_path="none"; if (Test-Path $file_path) {  Remove-Item $file_path -Recurse -Force };
+----
+
+== 参考
+
+* https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-7.2[Remove-Item]
