@@ -1,0 +1,33 @@
+---
+title: PowerShellでファイルやディレクトリの存在チェック
+date: 2022-06-05T20:20:00+09:00
+draft: false
+tags:
+  - PowerShell 
+---
+
+= PowerShellでファイルやディレクトリの存在チェック
+
+*Test-Path* を使用する。
+
+.存在するか確認
+[source,ps1]
+----
+$file_path = "test.txt";
+if(Test-Path $file_path) {
+  echo "存在する";
+};
+----
+
+.存在しないか確認
+[source,ps1]
+----
+$file_path = "test.txt";
+if((Test-Path $file_path) -ne "True") {
+  echo "存在しない";
+};
+----
+
+== 参考
+
+* https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-path?view=powershell-7.2[Test-Path]
