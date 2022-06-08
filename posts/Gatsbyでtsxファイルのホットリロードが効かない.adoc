@@ -1,0 +1,28 @@
+---
+title: Gatsbyでtsxファイルのホットリロードが効かない
+date: 2022-06-09T07:33:00+09:00
+draft: false
+tags:
+  - Node.js
+  - Gatsby
+---
+
+= Gatsbyでtsxファイルのホットリロードが効かない
+
+Gatsbyのプロジェクトを新規作成したところ、tsxファイルを編集してもホットリロードが効かない。 +
+2.X.X時代のプロジェクトでは効いていた。
+
+== 環境
+
+* Microsoft Windows 10 Home
+* WSL 2
+* Node.js: 14.19.3
+* Gatsby: 4.16.0
+
+== 対応
+
+環境変数に *WATCHPACK_POLLING=true* を追加
+
+NOTE: *CHOKIDAR_USEPOLLING=true* は効果がなかった。
+
+時間の関係上原因は調査せず
