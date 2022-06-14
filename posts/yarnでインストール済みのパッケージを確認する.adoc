@@ -1,0 +1,35 @@
+---
+title: yarnでインストール済みのパッケージを確認する
+date: 2022-06-14T00:00:00+00:00
+draft: false
+tags:
+  - yarn
+---
+
+= yarnでインストール済みのパッケージを確認する
+
+== 環境
+
+* yarn: 1.22.19
+
+== 方法
+
+以下のコマンドで確認する
+
+```
+yarn list --pattern パッケージ名1 パッケージ名2
+```
+
+----
+> yarn list --pattern @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+yarn list v1.22.19
+warning Filtering by arguments is deprecated. Please use the pattern option instead.
+├─ @aws-sdk/client-s3@3.107.0
+└─ @aws-sdk/s3-request-presigner@3.107.0
+Done in 1.13s
+----
+
+== 参考
+
+* https://chore-update--yarnpkg.netlify.app/ja/docs/cli/list[yarn list]
+
