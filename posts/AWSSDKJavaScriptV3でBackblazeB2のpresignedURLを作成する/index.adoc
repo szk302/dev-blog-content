@@ -1,0 +1,75 @@
+---
+title: AWSSDKJavaScriptV3でBackblazeB2のpresignedURLを作成する
+date: 2022-06-14T08:39:00+09:00
+draft: false
+tags:
+  - AWS SDK for JavaScript v3
+  - presigned URL
+  - Backblaze B2
+  - B2 Cloud Storage
+  - Backblaze
+---
+
+= AWS SDK JavaScript V3でBackblaze B2のpresigned URLを作成する
+
+v2での作り方は転がってるが、v3での作り方がわからず若干ハマったのでメモ
+
+== パッケージインストール
+
+```
+yarn add @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+```
+
+== 環境
+
+```
+>yarn list --pattern @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+yarn list v1.22.19
+warning Filtering by arguments is deprecated. Please use the pattern option instead.
+├─ @aws-sdk/client-s3@3.107.0
+└─ @aws-sdk/s3-request-presigner@3.107.0
+Done in 1.13s
+```
+
+== 対応
+
+BackBlazeB2の *keyID* をアクセスキーに、*applicationKey* をシークレットアクセスキーに、バケットのEndpointをエンドポイントに設定して作成する
+
+以下作成したコード
+
+./main.ts
+[source,ts]
+----
+import Client from "./BucketClinet";
+
+const client = new Client(accessKey, secretAccessKey, endpoint);
+url = await client.getPreSignedUrl(env.BUCKET_NAME, "public/sample.png");
+----
+
+.BucketClient.ts
+[source,ts]
+----
+include::./BucketClient.ts[]
+----
+
+Note::
+  * S3ClientConfigの *region* はカスタムエンドポイントを使用する場合でも指定しないとエラーになる
+  * S3ClientConfigの *forcePathStyle* を指定しないとpresigned URLのエンドポイント部分が空になる
+
+== 確認
+
+vscodeのRestClientで確認
+
+.presigned.http
+[source,ts]
+----
+include::./presigned.http[]
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/modules/_aws_sdk_s3_request_presigner.html#s3requestpresigneroptions[Module @aws-sdk/s3-request-presigner]
+* https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/index.html[S3 Client - AWS SDK for JavaScript v3]
+* https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/interfaces/s3clientconfig.html[Interface S3ClientConfig]
+* https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/interfaces/endpointsinputconfig.html#endpoint[Interface EndpointsInputConfig]
+* https://github.com/aws/aws-sdk-js-v3/issues/3031[Custom endpoint not used when bucketEndpoint is true #3031]

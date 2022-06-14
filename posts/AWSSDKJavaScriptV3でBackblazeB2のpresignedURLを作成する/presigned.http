@@ -1,0 +1,4 @@
+PUT ${PRESIGNED_URL}
+content-type: image/png
+
+< ./sample.png
