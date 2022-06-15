@@ -1,0 +1,47 @@
+---
+title: devcontainerでGatsbyのTelemetryの表示をoffにする
+date: 2022-06-16T07:50:00+09:00
+draft: false
+tags:
+  - Node.js
+  - Gatsby
+  - Visual Studio Code
+  - VSCode
+  - devContainer
+---
+
+= devcontainerでGatsbyのTelemetryの表示をoffにする
+
+devcontainerでgatsbyを利用時にコンテナ再作成してから *yarn start* すると以下の表示がでる。
+
+```
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║   Gatsby collects anonymous usage analytics                            ║
+║   to help improve Gatsby for all users.                                ║
+║                                                                        ║
+║   If you'd like to opt-out, you can use `gatsby telemetry --disable`   ║
+║   To learn more, checkout https://gatsby.dev/telemetry                 ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+```
+
+`gatsby telemetry --disable` を実行すると *~/.config/gatsby/config.json* に値が設定され次回以降表示が消えるのだが、コンテナ作り直すと設定ファイルごと消えるため、毎回出てしまう。
+
+環境変数に以下の設定を行い表示されないようにする。
+
+* `GATSBY_TELEMETRY_DISABLED=1`
+
+== 対応
+
+Dockerfileに以下のように環境変数を追記
+
+[source,docker]
+----
+FROM node:16.15.1
+ENV GATSBY_TELEMETRY_DISABLED=1
+----
+
+== 参考
+
+* https://www.gatsbyjs.com/docs/telemetry/[Telemetry]
