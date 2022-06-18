@@ -1,0 +1,40 @@
+---
+title: CloudflarePagesでビルド時にNodeのバージョンを指定する
+date: 2022-06-18T09:58:00+09:00
+draft: false
+tags:
+  - Cloudflare
+  - Cloudflare Pages
+  - Pages
+  - node-version
+---
+
+= CloudflarePagesでビルド時にNodeのバージョンを指定する
+
+CloudflarePagesを利用してGatsbyビルド時に以下のエラーが発生した。
+
+```
+07:43:59.243	error gatsby@4.15.2: The engine "node" is incompatible with this module. Expected version ">=14.15.0". Got "12.18.0"
+07:43:59.253	error Found incompatible module.
+```
+
+Cloudflareの2022/06/18時点のNode.jsのデフォルトのバージョンは *12.18.0* 
+
+== 対応
+
+.node-versionという名前のファイルを作成し、バージョンを記載
+
+..node-version
+[source,txt]
+----
+16.15.1
+----
+
+他の対応方法としては *.nvmrc* ファイルや環境変数 *NODE_VERSION* の指定方法が対応しているようだ。
+
+== 参考
+
+* https://developers.cloudflare.com/pages/platform/build-configuration#language-support-and-tools[Cloudflare Docs/Pages # Language support and tools]
+
+
+
