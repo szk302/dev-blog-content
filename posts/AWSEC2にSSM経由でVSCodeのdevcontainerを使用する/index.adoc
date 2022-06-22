@@ -1,0 +1,143 @@
+---
+title: AWSEC2にSSM経由でVSCodeのdevcontainerを使用する
+date: 2022-06-22T19:39:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS EC2
+  - AWS Systems Manager Session Manager
+  - VSCode
+  - devcontainer
+---
+
+= AWSEC2にSSM経由でVSCodeのdevcontainerを使用する
+
+AWSのEC2に対してSessonManager経由で接続しdevcontainerを使用したい。
+
+[plantuml]
+----
+@startuml
+!include <awslib/AWSCommon>
+!include <awslib/GroupIcons/Cloud>
+!include <awslib/General/Client>
+!include <awslib/Compute/EC2>
+' !include <awslib/ManagementGovernance/SystemsManager>
+
+left to right direction
+
+Cloud(aws,"AWS","aws") {
+  node systemsManager
+  EC2(ec2,EC2,インスタンス) {
+    agent ssmagent
+    agent docker
+    node container
+  }
+}
+
+Client(client, "VSCode", "local") {
+  agent sessionManagerPlugin
+}
+
+
+client --> container :ssm経由での接続 
+
+@enduml
+----
+
+== 環境
+
+=== ローカル
+
+* OS: Windows 10 Home
+* VSCode: 1.68.1
+* AWS CLI: 2.4.18
+* Session Manager plugin: 1.2.295.0
+
+=== リモート
+
+* OS: Amazon Linux 2 Kernel 5.10
+* AMI: ami-0b7546e839d7ace12
+* インスタンスタイプ: t3.large
+** microはタイムアウトした
+
+== 対応
+
+EC2にDockerを入れてlocalのSSHの設定にProxyCommandを指定するだけ。 +
+ローカルにDockerは必要ないそう。
+
+以下、設定の流れ
+
+1. VSCodeの https://code.visualstudio.com/docs/remote/ssh[Remote Development using SSH] でリモート接続
+2. リモート接続したEC2に *Docker* と *docker-compose* をインストール
+3. devcontainerを起動
+
+=== 1. VSCodeの https://code.visualstudio.com/docs/remote/ssh[Remote Development using SSH] でリモート接続
+
+==== 準備
+
+. SMSMがオンラインになるようEC2を起動
+** ※ロールに注意
+. ~/.ssh/configに接続対象の設定を以下のように追記 +
+[source,config]
+----
+Host ec2
+    User ec2-user
+    Port 22
+    ProxyCommand powershell.exe aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p
+    HostName ${インスタンスID}
+    IdentityFile ${秘密鍵のパス}
+----
+.example
+[source,config]
+----
+Host ec2
+    User ec2-user
+    Port 22
+    ProxyCommand powershell.exe aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p
+    HostName i-07ee5a633624f8c9c
+    IdentityFile ~/.ssh/aws_szk302.pem
+----
+
+==== 接続
+
+リモートエクスプローラからSSHターゲットを選択し、SSHのconfigに設定したhostを選択して接続する。
+
+=== 2. リモート接続したEC2に *Docker* と *docker-compose* をインストール
+
+. Dockerをインストール  +
+[source,console]
+----
+sudo amazon-linux-extras install docker -y
+sudo usermod -aG docker $USER
+sudo systemctl enable docker
+sudo systemctl start docker
+----
+. docker-composeをインストール 
+[source,console]
+----
+sudo curl -L --fail https://github.com/docker/compose/releases/download/1.29.2/run.sh -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+----
+
+TIP: docker-composeはv1系が必要(docker-composeコマンドが使える必要がある)
+TIP: インストールしたら再接続すること
+
+=== 3. devcontainerを起動
+
+devcontainerを準備 +
+
+.devcontainer
+[source,txt]
+----
+.devcontainer
+├── Dockerfile
+├── devcontainer.json
+└── docker-compose.yml
+----
+
+F1からいつも通りコンテナ環境を開く
+
+== 参考
+
+* https://code.visualstudio.com/remote/advancedcontainers/develop-remote-host#_connect-using-the-remote-ssh-extension-recommended[Develop on a remote Docker host # Connect using the Remote - SSH extension (recommended)]
+* https://docs.docker.com/compose/install/[Install Docker Compose]
