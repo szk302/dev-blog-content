@@ -1,0 +1,103 @@
+---
+title: CloudflareWorkersでHonoを試してみる
+date: 2022-06-26T08:16:00+09:00
+draft: false
+tags:
+  - Cloudflare
+  - Cloudflare Workers
+  - Hono
+---
+
+= CloudflareWorkersでHonoを試してみる
+
+== プロジェクトの作成
+
+.console
+```
+npx create-cloudflare sample-hono https://github.com/honojs/hono-minimal
+```
+
+以下、作成されたディレクトリ構造
+
+.console
+```
+root@5ad01add5449:/workspace# tree sample-hono 
+sample-hono
+|-- README.md
+|-- jest.config.js
+|-- package.json
+|-- src
+|   |-- index.test.ts
+|   `-- index.ts
+`-- wrangler.toml
+
+```
+
+依存モジュールをインストール
+
+.console
+```bash
+root@5ad01add5449:/workspace/sample-hono# npm i
+```
+
+.console
+```bash
+root@5ad01add5449:/workspace/sample-hono# npm run dev
+
+> hono-minimal@0.0.1 dev
+> wrangler dev src/index.ts
+
+ ⛅️ wrangler 2.0.15 
+--------------------
+Attempting to login via OAuth...
+Opening a link in your default browser: https://dash.cloudflare.com/oauth2/auth?response_type=code&client_id=...省略
+```
+
+ブラウザを開き上記のURLを叩いてCloudflareにログインする
+
+.console
+```cmd
+C:\Users\szk>curl http://localhost:35915/
+<h1>Hello Hono!</h1>
+```
+
+== デプロイする
+
+.console
+```cmd
+npm run deploy
+```
+
+以下のエンドポイントのworkerが作成された
+
+* hono-minimal.szk302.workers.dev
+
+sample-honoというWorker名にしたいため、wrangler.tomlのnameを書き換えた。
+
+.wrangler.toml
+[source,toml]
+----
+name="sample-hono"
+workers_dev = true
+
+compatibility_date = "2022-02-03"
+----
+
+もう一度デプロイ
+
+.console
+```cmd
+npm run deploy
+```
+
+.cmd
+```
+C:\Users\szk>curl https://sample-hono.szk302.workers.dev/
+<h1>Hello Hono!</h1>
+```
+
+== 参考
+
+* https://yusukebe.com/posts/2022/hono-40-things/[Cloudflare Workersフレームワーク「Hono」の紹介]
+* https://github.com/honojs/hono[honojs/hono]
+* https://developers.cloudflare.com/workers/wrangler/cli-wrangler/configuration/[Workers/Configuration]
