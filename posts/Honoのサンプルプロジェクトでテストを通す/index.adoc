@@ -1,0 +1,124 @@
+---
+title: Honoのサンプルプロジェクトでテストを通す
+date: 2022-06-27T07:41:00+09:00
+draft: false
+tags:
+  - Cloudflare
+  - Cloudflare Workers
+  - Hono
+  - esbuild-jest
+---
+
+= Honoのサンプルプロジェクトでテストを通す
+
+前回以下のコマンドでサンプルプロジェクトを作成したが、そのままではテストが通らなかった。 +
+また、全部のパスを通るテストを追加してみたがカバレッジが100%に上がらなかったので対応
+
+.console
+```
+npx create-cloudflare sample-hono https://github.com/honojs/hono-minimal
+```
+
+そのまま実行した場合以下のようにエラーが出力された。
+
+.console
+```
+root@5ad01add5449:/workspace/sample-hono2# npm run test
+
+> hono-minimal@0.0.1 test
+> jest --verbose
+
+ FAIL  src/index.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/workspace/sample-hono/dist/index.js'
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        5.37 s
+```
+
+またカバレッジは以下の通り
+
+.console
+```
+root@5ad01add5449:/workspace/sample-hono# npm run test
+
+> sample-hono@0.0.1 test
+> jest --verbose --coverage
+
+ PASS  src/index.test.ts (9.735 s)
+  Test the application
+    ✓ Should return 200 response (10 ms)
+    ✓ Should return 401 response (1 ms)
+    ✓ Should return 200 response (18 ms)
+    ✓ Should return 200 response (2 ms)
+    ✓ Should return 201 response (3 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |   97.67 |    72.72 |    90.9 |   97.36 |                   
+ index.ts |   97.67 |    72.72 |    90.9 |   97.36 | 21                
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        16.498 s
+Ran all test suites.
+```
+
+== 対応
+
+修正箇所は以下2つ
+
+* package.jsonのmainをsrc/index.tsに変更
+* esbuild-jestの設定にsourcemapを追記(※カバレッジ対応)
+
+.package.json
+[source,json]
+----
+include::./sample-hono/package.json[]
+----
+
+.jest.config.js
+[source,js]
+----
+include::./sample-hono/jest.config.js[]
+----
+
+== 結果
+
+.console
+```
+root@5ad01add5449:/workspace/sample-hono# npm run test
+
+> sample-hono@0.0.1 test
+> jest --verbose --coverage
+
+ PASS  src/index.test.ts (12.36 s)
+  Test the application
+    ✓ Should return 200 response (9 ms)
+    ✓ Should return 401 response (2 ms)
+    ✓ Should return 200 response (23 ms)
+    ✓ Should return 200 response (10 ms)
+    ✓ Should return 201 response (3 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ index.ts |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        24.842 s
+Ran all test suites.
+```
+
+== 参考
+
+* https://github.com/aelbore/esbuild-jest[aelbore/esbuild-jest]
+* https://esbuild.github.io/api/#loader[esbuild/API # Loader]
