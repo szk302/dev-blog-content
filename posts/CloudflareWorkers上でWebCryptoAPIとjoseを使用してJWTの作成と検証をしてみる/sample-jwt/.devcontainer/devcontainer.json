@@ -1,0 +1,13 @@
+{
+  "name": "sample",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "editor.tabSize": 2
+  },
+  "extensions": [
+    "esbenp.prettier-vscode"
+  ],
+  "shutdownAction": "stopCompose"
+}

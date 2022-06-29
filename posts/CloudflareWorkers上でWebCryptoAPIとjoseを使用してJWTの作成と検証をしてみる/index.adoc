@@ -1,0 +1,55 @@
+---
+title: CloudflareWorkers上でWebCryptoAPIとjoseを使用してJWTの作成と検証をしてみる
+date: 2022-06-29T08:58:00+09:00
+draft: false
+tags:
+  - Cloudflare
+  - Cloudflare Workers
+  - WebCryptoAPI
+  - jose
+---
+
+= CloudflareWorkers上でWebCryptoAPIとjoseを使用してJWTの作成と検証をしてみる
+
+Cloudflare Workers上でWeb Crypto APIで公開鍵と秘密鍵を作成し、joseでJWTの作成と検証をしてみた。
+
+[source,typescript]
+----
+include::./sample-jwt/src/index.ts[]
+----
+
+以下、実行した結果
+
+[source,json]
+----
+{
+  "token": "eyJhbGciOiJQUzI1NiJ9.eyJ1cm46ZXhhbXBsZTpjbGFpbSI6dHJ1ZSwiaWF0IjoxNjU2NTEyNzMwLCJpc3MiOiJ1cm46ZXhhbXBsZTppc3N1ZXIiLCJhdWQiOiJ1cm46ZXhhbXBsZTphdWRpZW5jZSIsImV4cCI6MTY1NjUxOTkzMH0.ENAV1ikjtBNxlysex3b2FTd7hyVeswRGPXqb9Bu2VcOkBKC_zps7ypzCaIKIsgZ4cX55oQwBxEQbdeY3gYUH9HUJDEdv1K7zRxVDbcuzilRGtgpXfeZg7ymRHjDZLhX8DQN5QinVH_pyypu4mu3yEOrR3DzTtsjajRpfUknTW5LptKlE90MZY7PETrDZQXz2-CrRflTGtAHuLUcBYC_VKJrXhMnCV412VXV62TsrOxHeW_8WzOBtDBscIV5H4qH_NFRrAzsx2rk1YD09rpIwFmtU0LYrbGItCqis07u0j29wmADLq2FKJBuDRHeiRpQGnOUQ258pnDdW0w_fIdOWbw",
+  "payload": {
+    "urn:example:claim": true,
+    "iat": 1656512730,
+    "iss": "urn:example:issuer",
+    "aud": "urn:example:audience",
+    "exp": 1656519930
+  },
+  "protectedHeader": {
+    "alg": "PS256"
+  },
+  "publicKey": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhO/yo4bsP7Dtz/bFuleWo8y3sFCOFPDFZg5lSJsIU9OoXWZ+gFs31amWAmVsiVPhjAZY2y/RgsVAOHcVX+5k/aGXvLLhDGeyrfA7oLy6O7koMuTNkhz+LocHjw2Lku7iYduM4LKD7luRPm2sA+8hjXi0Z068vjRsfa1rIn9iMmWswG6lDPxA8XnTqsCcdQQUc3WZxDEetmxdmH61N2IWJZ39dWlo9bDlIoU79y9n0y2LfusByEBBEKDHL1+aB5Ua4xsXM/cGW8UZkGlMioo6v76nUWVgq24TCZFmR6M6MCk03pS4mup2fa+Nn7GqLet9/SHB+w7ZoZ38EJEUbRRCQQIDAQAB-----END PUBLIC KEY-----"
+}
+----
+
+jwt.ioでも検証してみた。
+
+image::jwt.png[]
+
+== 参考
+
+* https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/exportKey[MDN/Web Crypto API/SubtleCrypto.exportKey()]
+* https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey[MDN/Web Crypto API/SubtleCrypto.generateKey()]
+* https://github.com/panva/jose/blob/main/docs/classes/jwt_sign.SignJWT.md[panva/jose/Class: SignJWT]
+* https://github.com/panva/jose/blob/main/docs/functions/jwt_verify.jwtVerify.md[panva/jose/Function: jwtVerify]
+* https://github.com/panva/jose/blob/v3.17.0/test-cloudflare-workers/cloudflare.test.mjs[panva/jose/test-cloudflare-workers/cloudflare.test.mjs]
+* https://github.com/panva/jose/issues/265[panva/jose/Cloudflare Workers Support #265]
+* https://datatracker.ietf.org/doc/html/rfc7518#section-3.1[ JSON Web Algorithms (JWA) # 3.1.  "alg" (Algorithm) Header Parameter Values for JWS]
+* https://www.iana.org/assignments/jose/jose.xhtml[JSON Object Signing and Encryption (JOSE) # JSON Web Signature and Encryption Algorithms]
+* https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use[JWTs: Which Signing Algorithm Should I Use?]
