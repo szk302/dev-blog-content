@@ -1,0 +1,21 @@
+---
+title: カレントディレクトリ以下に存在するあるディレクトリをすべて消したい
+date: 2022-07-01T08:11:00+09:00
+draft: false
+tags:
+  - CLI
+  - find
+---
+
+= カレントディレクトリ以下に存在するあるディレクトリをすべて消したい
+
+ドライブ容量がギリギリになり容量を圧迫するnode_modulesを全部消したかったのでメモ
+
+== 対応
+
+findを使用してnode_modulesという名前のディレクトリを全部消去
+
+[source,sh]
+----
+find ./ -type d -name node_modules -exec rm -rf {} \;
+----
