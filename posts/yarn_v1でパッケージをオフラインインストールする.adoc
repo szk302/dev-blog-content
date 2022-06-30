@@ -1,0 +1,49 @@
+---
+title: yarn_v1でパッケージをオフラインインストールする
+date: 2022-08-26T00:00:00+00:00
+draft: false
+tags:
+  - yarn
+  - yarn v1
+---
+
+= yarn_v1でパッケージをオフラインインストールする
+
+yarnのv1を使用している環境でproxyを建てずオフラインインストールしたいという要望があったので調査。
+
+== 環境
+
+* yarn: 1.22.19
+
+== 方法
+
+=== オフラインインストール用モジュールの取得
+
+以下の.yarnrcをプロジェクトのディレクトリに配置し、node_moduels,yarnのキャッシュを削除して `yarn install` する
+
+. offlineインストール用モジュールの配置場所作成(今回は *yarn_offline* ディレクトリに配置する)
+** `mkdir yarn_offline`
+. node_modulesの削除
+** `rm -rf node_modules`
+. yarnのcacheクリア
+** `yarn cache clean`
+. .yarnrcの配置
++
+[source,txt]
+----
+yarn-offline-mirror "./yarn_offline"
+yarn-offline-mirror-pruning true
+----
+. パッケージの取得
+** `yarn install --verbose`
+
+=== オフラインインストールの実行
+
+. オフラインインストールの実行
+** `yarn install --offline`
+
+== 参考
+
+* https://classic.yarnpkg.com/blog/2016/11/24/offline-mirror/[]
+* https://classic.yarnpkg.com/en/docs/prune-offline-mirror[yarn-offline-mirror-pruning]
+
