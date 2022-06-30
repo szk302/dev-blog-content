@@ -1,0 +1,45 @@
+---
+title: AWSCodeBuildのプロジェクトをCLIでコピーする
+date: 2022-06-30T21:26:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - AWS CodeBuild
+---
+
+= AWSCodeBuildのプロジェクトをCLIでコピーする
+
+AWSCodeBuildのプロジェクトをコピーしたいという要望があったのでCLIで実施
+
+== 方法
+
+AWS CLIでプロジェクト設定を取得し、登録できる形に変形させCLIから登録する。 +
+コピー元のプロジェクトのロールがプロジェクト作成時にデフォルトで作成されたロール(コピー元のプロジェクト名入りのポリシーが付与されている)のため、そのままだと実行時にエラーとなる。 +
+コピー先のプロジェクトのロールを指定できるようにした。
+
+.sh
+[source,sh]
+----
+srcProjectName="コピー元プロジェクト名"
+dstProjectName="コピー先プロジェクト名"
+dstProjectServiceRoleArn="コピー先プロジェクトのサービスロールARN"
+aws codebuild batch-get-projects --names ${srcProjectName} | jq -r ".projects[0] | del (.arn, .created, .lastModified, .badge, .projectVisibility) | .name |=\"${dstProjectName}\" | .serviceRole |=\"${dstProjectServiceRoleArn}\"" > "${dstProjectName}.json"
+aws codebuild create-project --cli-input-json "file://${dstProjectName}.json" 1> /dev/null
+----
+
+.Ex.
+[source,sh]
+----
+srcProjectName="sample-builder"
+dstProjectName="sample-builder2"
+dstProjectServiceRoleArn="arn:aws:iam::123456789012:role/service-role/codebuild-sample"
+aws codebuild batch-get-projects --names ${srcProjectName} | jq -r ".projects[0] | del (.arn, .created, .lastModified, .badge, .projectVisibility) | .name |=\"${dstProjectName}\" | .serviceRole |=\"${dstProjectServiceRoleArn}\"" > "${dstProjectName}.json"
+aws codebuild create-project --cli-input-json "file://${dstProjectName}.json" 1> /dev/null
+----
+
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/codebuild/batch-get-projects.html[AWS CLI Command Reference/batch-get-projects]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/codebuild/create-project.html[AWS CLI Command Reference/create-project.html]
