@@ -1,0 +1,33 @@
+---
+title: PowerShellでJSONを読み取りUTF-8のBOMなしでファイルに書き出す
+date: 2022-07-08T19:10:00+09:00
+draft: false
+tags:
+  - PowerShell
+---
+
+= PowerShellでJSONを読み取りUTF-8のBOMなしでファイルに書き出す
+
+ConvertFrom-JsonでJSONからObjectにパースし、ConvertTo-JsonでJSONとしてBOMなしUTF-8でファイルに書き出す。
+
+.json.ps1
+[source,ps1]
+----
+include::./json.ps1[]
+----
+
+.sample.json
+[source,json]
+----
+include::./sample.json[]
+----
+
+.sample_cp.json
+[source,json]
+----
+include::./sample_cp.json[]
+----
+
+== 参考
+
+* https://gist.github.com/stknohg/c84b2a8b6aa02b25a327c1420b0a1695[stknohg/Write-BOMlessUTF8Sample.ps1]
