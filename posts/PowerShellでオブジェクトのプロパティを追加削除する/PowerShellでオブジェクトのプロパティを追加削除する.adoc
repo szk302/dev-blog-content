@@ -1,0 +1,33 @@
+---
+title: PowerShellでオブジェクトのプロパティを追加削除する
+date: 2022-07-14T08:36:00+09:00
+draft: false
+tags:
+  - PowerShell
+---
+
+= PowerShellでオブジェクトのプロパティを追加削除する
+
+Jsonを読み込んで加工したかったので調査
+
+.json.ps1
+[source,ps1]
+----
+include::./json.ps1[]
+----
+
+.sample.json
+[source,json]
+----
+include::./sample.json[]
+----
+
+.sample_cp.json
+[source,json]
+----
+include::./sample_cp.json[]
+----
+
+== 参考
+
+* https://docs.microsoft.com/ja-jp/powershell/scripting/learn/deep-dives/everything-about-pscustomobject?view=powershell-7.2[PowerShell/Docs/PowerShell/スクリプトの作成/PSCustomObject について知りたかったことのすべて]
