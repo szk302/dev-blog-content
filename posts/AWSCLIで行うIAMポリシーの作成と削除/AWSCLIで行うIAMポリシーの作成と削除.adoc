@@ -1,0 +1,57 @@
+---
+title: AWSCLIで行うIAMポリシーの作成と削除
+date: 2022-08-04T08:10:00+09:00
+draft: false
+categories:
+  - AWS
+tags:
+  - AWS
+  - AWS CLI
+  - AWS IAM
+---
+
+= AWSCLIで行うIAMポリシーの作成と削除
+
+テストで使用するのでサクッと作りたいというご要望
+
+== 方法
+
+=== 作成
+
+.bash
+[source,bash]
+----
+POLICY_NAME="szk302-iam-policy"
+aws iam create-policy --policy-name "${POLICY_NAME}" --policy-document file://./policy.json
+----
+
+.表示
+[source,json]
+----
+include::policy.json[]
+----
+
+==== jsonファイル使わない版
+
+.bash
+[source,bash]
+----
+POLICY_NAME="szk302-iam-policy"
+aws iam create-policy --policy-name "${POLICY_NAME}" --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["ec2:Describe*","iam:ListRoles","sts:AssumeRole"],"Resource":"*"}]}'
+----
+
+=== 削除
+
+.bash
+[source,bash]
+----
+ACCOUNT_ID=123456789012
+POLICY_NAME="szk302-iam-policy"
+POLICY_ARN="arn:aws:iam::${ACCOUNT_ID}:policy/${POLICY_NAME}"
+aws iam delete-policy --policy-arn "${POLICY_ARN}"
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/create-policy.html[aws/iam/create-policy]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/delete-policy.html[aws/iam/delete-policy]
