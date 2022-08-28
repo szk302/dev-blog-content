@@ -1,0 +1,91 @@
+---
+title: AWSCLIで行うIAMロールの作成と削除
+date: 2022-08-04T08:10:00+09:00
+draft: false
+categories:
+  - AWS
+tags:
+  - AWS
+  - AWS CLI
+  - AWS IAM
+---
+
+= AWSCLIで行うIAMロールの作成と削除
+
+テストで使用するのでサクッと作りたいというご要望
+
+== 方法
+
+=== 作成
+
+.bash
+[source,bash]
+----
+ROLE_NAME="szk302-iam-role"
+aws iam create-role --role-name "${ROLE_NAME}" --assume-role-policy-document file://./ec2-assume-role-policy.json
+----
+
+.ec2-assume-role-policy.json
+[source,json]
+----
+include::ec2-assume-role-policy.json[]
+----
+
+==== jsonファイル使わない版
+
+.bash
+[source,bash]
+----
+ROLE_NAME="szk302-iam-role"
+aws iam create-role --role-name "${ROLE_NAME}" --assume-role-policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["sts:AssumeRole"],"Principal":{"Service":["ec2.amazonaws.com"]}}]}'
+----
+
+=== ポリシーの付与
+
+.bash
+[source,bash]
+----
+ACCOUNT_ID="123456789101"
+ROLE_NAME="szk302-iam-role"
+POLICY_NAME="szk302-iam-policy"
+POLICY_ARN="arn:aws:iam::${ACCOUNT_ID}:policy/${POLICY_NAME}"
+aws iam attach-role-policy --policy-arn ${POLICY_ARN} --role-name "${ROLE_NAME}"
+----
+
+=== ポリシーの剥奪
+
+.bash
+[source,bash]
+----
+ACCOUNT_ID="123456789101"
+ROLE_NAME="szk302-iam-role"
+POLICY_NAME="szk302-iam-policy"
+POLICY_ARN="arn:aws:iam::${ACCOUNT_ID}:policy/${POLICY_NAME}"
+aws iam detach-role-policy --policy-arn ${POLICY_ARN} --role-name "${ROLE_NAME}"
+----
+
+=== 削除
+
+.bash
+[source,bash]
+----
+ROLE_NAME="szk302-iam-role"
+aws iam delete-role --role-name "${ROLE_NAME}"
+----
+
+== 備考
+
+.lambda版
+[source,bash]
+----
+ROLE_NAME="szk302-role"
+aws iam create-role --role-name "${ROLE_NAME}" --assume-role-policy-document file://./lambda-assume-role-policy.json
+----
+
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/create-role.html[aws/iam/create-role]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/delete-role.html[aws/iam/delete-role]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/attach-role-policy.html[aws/iam/attach-role-policy]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/detach-role-policy.html[aws/iam/detach-role-policy]
