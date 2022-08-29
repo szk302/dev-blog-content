@@ -1,0 +1,30 @@
+---
+title: 別ユーザで動作しているtomcatのスレッドダンプを取る
+date: 2022-08-30T07:32:00+09:00
+draft: false
+tags:
+  - jstack
+  - Java
+  - Tomcat
+---
+
+= 別ユーザで動作しているTomcatのスレッドダンプを取る
+
+ECSExecでコンテナに入りjstackでスレッドダンプを取ろうとしたところ以下のエラーが発生。
+
+`Unable to open socket file /proc/81/root/tmp/.java_pid81: target process 81 dosen't responde within 10500ms or HotSpot VM not loaded`
+
+Tomcatはtomcatユーザで動かしているため、エラーが発生したようだ。
+
+== 対応
+
+tomcatユーザで実行することで解決
+
+[source,sh]
+----
+su - tomcat -c "jstack -l ${TOMCAT_PID}"
+----
+
+== 参考
+
+* https://access.redhat.com/ja/solutions/915983[jstack / jmap コマンドを実行した際に "Unable to open socket file" というメッセージが表示されスレッドダンプ/ヒープダンプが生成できません]
