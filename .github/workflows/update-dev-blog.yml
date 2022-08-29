@@ -8,7 +8,7 @@ jobs:
   build_dev_blog:
     uses: "szk302/dev-blog-builder/.github/workflows/build.yml@main"
     with:
-      hugo_version: '0.80.0'
+      hugo_version: '0.102.0'
       asciidoctor_version: '1.14.0'
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
