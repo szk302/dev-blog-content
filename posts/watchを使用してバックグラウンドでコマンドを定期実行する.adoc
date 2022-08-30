@@ -1,0 +1,25 @@
+---
+title: watchを使用してバックグラウンドでコマンドを定期実行する
+date: 2022-08-30T09:00:00+00:00
+draft: false
+tags:
+  - watch
+---
+
+= watchを使用してバックグラウンドでコマンドを定期実行する
+
+jstackでスレッドダンプを定期的に取得するために調査
+
+== 方法
+
+[source,sh]
+----
+OUTPUT_DIR="/tmp/output"
+JAVA_PID=1
+INTERVAL=30
+nohup watch -n "${INTERVAL}" "su - tomcat -c \"jstack -l ${JAVA_PID} >> /work/output/threaddump.\$(date +%F-%H%M%S)\"" &> /dev/null &
+----
+
+== 参考
+
+* https://linuxjm.osdn.jp/html/procps/man1/watch.1.html[WATCH]
