@@ -1,0 +1,59 @@
+---
+title: vmstatで日付入りのリソース情報をファイルに出力する
+date: 2022-08-31T05:34:00+00:00
+draft: false
+tags:
+  - vmstat
+  - awk
+---
+
+= vmstatで日付入りのリソース情報をファイルに出力する
+
+vmstatでリソースの情報を日付入りでファイルに出力する
+
+== 方法1
+
+awkで先頭に日付を付与しファイル出力
+
+NOTE: awkがバッファするためflush(*system("")*)しないとファイルに出力されない。 
+
+[source,sh]
+----
+vmstat 1 | awk '{print strftime("%Y-%m-%d %T ") $0;system("");}' > vmstat.log
+----
+
+[source,sh]
+----
+cat vmstat.log
+2022-08-31 05:42:14 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+2022-08-31 05:42:14  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+2022-08-31 05:42:14  0  0      0 2942748 427172 1859864    0    0     1     2   39    9  1  1 98  0  0
+2022-08-31 05:42:15  0  0      0 2942896 427172 1859864    0    0     0     0   30  177  0  0 100  0  0
+2022-08-31 05:42:16  0  0      0 2943000 427180 1859864    0    0     0    12  367  981  1  1 98  0  0
+----
+
+== 方法2
+
+-tオプションでtimestampを表示
+
+[source,sh]
+----
+vmstat -t 1 > vmstat.log
+----
+
+[source,sh]
+----
+cat vmstat.log
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu----- -----timestamp-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st                 JST
+ 0  0      0 2935720 436988 1860016    0    0     1     2   39   13  1  1 98  0  0 2022-08-31 07:27:35
+ 0  0      0 2935684 436996 1860008    0    0     0    12   29  229  0  0 100  0  0 2022-08-31 07:27:36
+ 0  0      0 2935788 436996 1860016    0    0     0    16   22  139  0  0 100  0  0 2022-08-31 07:27:37
+ 0  0      0 2936528 436996 1860016    0    0     0     0  374  898  1  1 99  0  0 2022-08-31 07:27:38
+----
+
+== 参考
+
+* https://man7.org/linux/man-pages/man8/vmstat.8.html[vmstat(8) — Linux manual page]
+* https://blog.cles.jp/item/6516[Tips awk に標準出力をバッファさせないようにする]
+* https://www.gnu.org/software/gawk/manual/gawk.html#index-sidebar_002c-Controlling-Output-Buffering-with-_0040code_007bsystem_0028_0029_007d-1457[Controlling Output Buffering with system()]
