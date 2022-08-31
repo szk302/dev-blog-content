@@ -1,6 +1,6 @@
 ---
 title: vmstatで日付入りのリソース情報をファイルに出力する
-date: 2022-08-31T05:34:00+00:00
+date: 2022-08-31T00:00:00+00:00
 draft: false
 tags:
   - vmstat
