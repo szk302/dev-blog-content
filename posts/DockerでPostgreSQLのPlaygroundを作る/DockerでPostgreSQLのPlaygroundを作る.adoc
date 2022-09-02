@@ -1,0 +1,48 @@
+---
+title: DockerでPostgreSQLのPlaygroundを作る
+date: 2022-09-02T23:27:00+09:00
+draft: false
+tags:
+  - PostgreSQL
+---
+
+= DockerでPostgreSQLのPlaygroundを作る
+
+最近PostgreSQLを触ることが多いため、サクッと遊べるようにDockerで作成してみた。
+
+.Dockerfile
+[source,docker]
+----
+include::Dockerfile[]
+----
+
+.docker-compose.yml
+[source,yml]
+----
+include::docker-compose.yml[]
+----
+
+== 初期構築スクリプト
+
+*/docker-entrypoint-initdb.d* に構築用DDLを配置すると起動時に勝手に読み込んで実行してくれる。
+
+docker-entrypoint-initdb.dディレクトリを/docker-entrypoint-initdb.dにバインドすることで、`docker-compose up` 実行時にDDLが実行される。
+
+.ディレクトリ構成
+[source,txt]
+----
+./
+├── Dockerfile
+├── docker-compose.yml
+└── docker-entrypoint-initdb.d
+    ├── 01.create-db.sql
+    ├── 02.create-role.sql
+    └── 03.create-schema.sql
+----
+
+NOTE: docker-entrypoint-initdb.dの下にddlというディレクトリを作成し配置してみたが実行されなかった。
+1階層目だけ有効らしい。
+
+== 参考
+
+* https://hub.docker.com/_/postgres/[docker/hub/postgres]

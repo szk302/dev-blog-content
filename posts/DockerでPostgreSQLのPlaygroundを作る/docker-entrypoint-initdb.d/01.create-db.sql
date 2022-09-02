@@ -1,0 +1,1 @@
+CREATE DATABASE app owner 'postgres' encoding 'UTF8' lc_collate 'ja_JP.UTF-8' lc_ctype 'ja_JP.UTF-8' template 'template0';
