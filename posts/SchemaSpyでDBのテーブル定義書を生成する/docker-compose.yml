@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    build: ./postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - "${PWD}/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+    networks:
+      - backend
+    environment:
+      POSTGRES_PASSWORD: postgres
+      WAIT_FOR_SCHEMASPY: 30 # schemaspyで生成終了するまでDBを停止させない
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      start_period: "5s" # ヘルスチェックの開始遅延
+      retries: 3
+      timeout: "5s"
+      interval: "5s" 
+  schemaspy:
+    image: schemaspy/schemaspy:6.1.0
+    volumes:
+      - "${PWD}/schemaspy/schemaspy.properties:/schemaspy.properties"
+      - "${PWD}/output:/output"
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+networks:
+  backend:

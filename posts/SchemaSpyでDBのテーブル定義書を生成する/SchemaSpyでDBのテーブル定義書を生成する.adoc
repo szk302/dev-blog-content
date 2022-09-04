@@ -1,0 +1,103 @@
+---
+title: SchemaSpyでDBのテーブル定義書を生成する
+date: 2022-09-05T06:57:00+09:00
+draft: false
+tags:
+  - SchemaSpy
+  - PostgreSQL
+---
+
+= SchemaSpyでDBのテーブル定義書を生成する
+
+SchmaSpyで手元のPostgreSQL用DDLからテーブル定義書を生成してみる
+
+== 方法
+
+PostgreSQLのDockerでDDLからテーブルを構築し、起動完了までwaitしてからSchemaSpyを別コンテナで実行する  +
+db立ち上げからSchemaSpy実行までdocker-composeで完結するよう環境依存をできるだけ減らしてみた。
+
+.tree
+[source,yml]
+----
+├── docker-compose.yml
+├── output
+├── postgres
+│   ├── Dockerfile
+│   └── docker-entrypoint-initdb.d
+│       ├── 01.create-db.sql
+│       ├── 02.create-role.sql
+│       ├── 03.create-schema.sql
+│       ├── 04.create-tables.sql
+│       └── 99.shutdown.sh
+└── schemaspy
+    └── schemaspy.properties
+----
+
+.docker-compose.yml
+[source,yml]
+----
+include::docker-compose.yml[]
+----
+
+.postgres/Dockerfile
+[source,yml]
+----
+include::postgres/Dockerfile[]
+----
+
+pg_ctlで指定時間秒数後にdbをシャットダウンするよう指定している。
+
+.postgres/docker-entrypoint-initdb.d/99.shutdown.sh
+[source,yml]
+----
+include::postgres/docker-entrypoint-initdb.d/99.shutdown.sh[]
+----
+
+.schemaspy/schemaspy.properties
+[source,properties]
+----
+include::schemaspy/schemaspy.properties[]
+----
+
+== 実行
+
+以下のコマンドを実行
+
+* `docker-compose up`
+
+== クリーン
+
+以下のコマンドを実行
+
+* `docker-compose down`
+
+== TODO
+
+* 日本語化対応
+
+== 注意
+
+以下のエラーが発生した場合はデータベースタイプが合っていないかもしれない。
+PostgreSQL11の場合はデータベースタイプ *pgsql11* を指定する。
+
+.console
+[source,yml]
+----
+schemaspy_1  | Gathering schema details......WARN  - Failed to retrieve stored procedure/function details using sql 'select r.routine_name, case when p.proisagg then 'AGGREGATE' else 'FUNCTION' end as routine_type, case when p.proretset then 'SETOF ' else '' end || case when r.data_type = 'USER-DEFINED' then r.type_udt_name else r.data_type end as dtd_identifier, r.external_language as routine_body, r.routine_definition, r.sql_data_access, r.security_type, r.is_deterministic, d.description as routine_comment from information_schema.routines r left join pg_namespace ns on r.routine_schema = ns.nspname left join pg_proc p on ns.oid = p.pronamespace and r.routine_name = p.proname left join pg_description d on d.objoid = p.oid where r.routine_schema = :schema'
+schemaspy_1  | ERROR: ?p.proisagg???????
+schemaspy_1  |   Hint: ?"p.prolang"????????????????
+schemaspy_1  |   Position: 34
+schemaspy_1  | (0sec)
+schemaspy_1  | Connecting relationships......(0sec)
+----
+
+=== 参考
+
+* https://dba.stackexchange.com/questions/238903/postgresql-11-error-column-p-proisagg-does-not-exist[PostgreSQL 11 error: column p.proisagg does not exist]
+* https://github.com/schemaspy/schemaspy/tree/master/src/main/resources/org/schemaspy/types[schemaspy/schemaspy/src/main/resources/org/schemaspy/types/]
+
+== 参考
+
+* https://hub.docker.com/r/schemaspy/schemaspy[schemaspy/schemaspy]
+* https://schemaspy.readthedocs.io/en/latest/started.html#configuration[SchemaSpy/Get Started#Configuration]
+* https://hub.docker.com/_/postgres/[docker/hub/postgres]
