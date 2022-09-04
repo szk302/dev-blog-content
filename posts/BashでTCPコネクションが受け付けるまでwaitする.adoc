@@ -1,0 +1,32 @@
+---
+title: BashでTCPコネクションが受け付けるまでwaitする
+date: 2022-09-04T13:50:00+09:00
+draft: false
+tags:
+  - Linux
+  - CLI
+  - Bash
+  - timeout
+  - sleep
+---
+
+= BashでTCPコネクションが受け付けるまでwaitする
+
+BashでTCP接続可能になるまでまち、接続できたら終了する方法を調べた。
+
+方法はncコマンドを使用する方法とBashだけでできる方法があるらしいが、ncコマンドは大抵デフォルトでインストールされていないので、Bashだけで行いたい。
+
+== 対応
+
+以下のコードで1秒間隔でTCP接続できるまで待ち、30秒経過した場合はタイムアウトする。
+
+[source,sh]
+----
+HOST=postgres
+PORT=5432
+timeout 30 bash -c "until printf '' 2>>/dev/null >>/dev/tcp/${HOST}/${PORT}; do sleep 1; done"
+----
+
+== 参考
+
+* https://stackoverflow.com/questions/35411972/bash-loop-until-a-certain-command-stops-failing[Bash loop until a certain command stops failing]
