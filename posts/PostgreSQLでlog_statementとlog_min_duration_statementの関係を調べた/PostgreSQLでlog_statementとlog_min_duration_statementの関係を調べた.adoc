@@ -1,0 +1,58 @@
+---
+title: PostgreSQLでlog_statementとlog_min_duration_statementの関係を調べた
+date: 2022-09-11T12:06:00+09:00
+draft: false
+tags:
+  - PostgreSQL
+  - log_statement
+  - log_min_duration_statement
+---
+
+= PostgreSQLでlog_statementとlog_min_duration_statementの関係を調べた
+
+log_statementとlog_min_duration_statementを指定したときのクエリーの出方がわからなかったため調査。 +
+pg_sleepでクエリ実行時間を制御して試した。
+
+=== log_statementのみ
+
+.log_statement=all
+[source,console]
+----
+db_1  | 2022-09-11 03:04:27.672 UTC [77] LOG:  実行 <unnamed>: select pg_sleep(2)
+----
+
+.log_statement=mod
+* 出力なし
+
+NOTE: log_statement=modで何もログに出力されないのはsleepだから。
+
+=== log_min_duration_statementのみ
+
+.log_min_duration_statement=250
+[source,console]
+----
+db_1  | 2022-09-11 03:02:49.063 UTC [75] LOG:  期間: 2002.130 ミリ秒  実行 <unnamed>: select pg_sleep(2)
+----
+
+=== log_statementとlog_min_duration_statement
+
+.log_statement=all,log_min_duration_statement=250
+[source,console]
+----
+db_1  | 2022-09-11 03:00:21.159 UTC [76] LOG:  実行 <unnamed>: select pg_sleep(2)
+db_1  | 2022-09-11 03:00:23.160 UTC [76] LOG:  期間: 2001.419 ミリ秒
+----
+
+.log_statement=mod,log_min_duration_statement=250
+[source,console]
+----
+db_1  | 2022-09-11 03:01:39.315 UTC [76] LOG:  期間: 2002.277 ミリ秒  実行 <unnamed>: select pg_sleep(2)
+----
+
+log_statementで出力すると *期間*の部分が出力されず、log_min_duration_statementと共に出力した場合は複数行で出力された。
+
+== 参考
+
+* https://postgresqlco.nf/doc/ja/param/log_statement/11/[POSTGRESQLCO.NF/log_statement]
+* https://postgresqlco.nf/doc/ja/param/log_min_duration_statement/11/[POSTGRESQLCO.NF/log_min_duration_statement]
+* https://aws.amazon.com/jp/premiumsupport/knowledge-center/rds-postgresql-query-logging/[Amazon RDS for PostgreSQL を使用してクエリのログ記録を有効化するにはどうすればよいですか?]
