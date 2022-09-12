@@ -1,0 +1,72 @@
+---
+title: psqlでSELECTした結果をCSVとして出力する
+date: 2022-09-13T07:12:00+09:00
+draft: false
+tags:
+  - psql
+---
+
+= psqlでSELECTした結果をCSVとして出力する
+
+psqlでselectした結果をCSVとして出力したい。
+
+== 方法
+
+2つの方法を試した。
+
+. COPYコマンドでCSV出力
+. セパレータに,を指定してコマンドの結果としてCSV出力
+
+=== COPYコマンドでCSV出力
+
+[source,bash]
+----
+psql -U postgres -c "COPY (SELECT name,setting FROM pg_catalog.pg_settings ORDER BY name) TO '/tmp/output.csv' With CSV DELIMITER ',';"
+----
+
+[source,console]
+----
+root@13b065302a7f:/# cat /tmp/output.csv
+DateStyle,"ISO, YMD"
+IntervalStyle,postgres
+TimeZone,Etc/UTC
+allow_in_place_tablespaces,off
+allow_system_table_mods,off
+application_name,psql
+archive_cleanup_command,""
+archive_command,(disabled)
+~~省略~~
+xmlbinary,base64
+xmloption,content
+zero_damaged_pages,off
+----
+
+=== セパレータに,を指定してコマンドの結果としてCSV出力
+
+[source,bash]
+----
+psql -U postgres -c "SELECT name,setting FROM pg_catalog.pg_settings ORDER BY name;" -A -F, > /tmp/output.csv
+----
+
+[source,console]
+----
+root@13b065302a7f:/# cat /tmp/output.csv
+name,setting
+DateStyle,ISO, YMD
+IntervalStyle,postgres
+TimeZone,Etc/UTC
+allow_in_place_tablespaces,off
+allow_system_table_mods,off
+application_name,psql
+archive_cleanup_command,
+archive_command,(disabled)
+~~省略~~
+xmlbinary,base64
+xmloption,content
+zero_damaged_pages,off
+(346 行)
+----
+
+== 参考
+
+* https://www.postgresql.jp/document/12/html/app-psql.html[PostgreSQL 12.4文書/PostgreSQLクライアントアプリケーション/psql]
