@@ -1,0 +1,26 @@
+---
+title: AmazonLinux2にExtrasLibraryからDockerとdocker-composeをインストールする
+date: 2022-09-25T10:23:00+09:00
+draft: false
+tags:
+    - AmazonLinux2
+    - Docker
+---
+
+= AmazonLinux2にExtrasLibraryからDockerとdocker-composeをインストールする
+
+AmazonLinux2にExtrasLibraryからDockerとdocker-composeをインストールする
+
+[source,sh]
+----
+# パッケージ更新
+sudo yum update -y
+# Dockerのインストール
+sudo amazon-linux-extras install docker -y
+sudo usermod -aG docker $USER
+sudo systemctl enable docker
+sudo systemctl start docker
+# docker-composeのインストール
+sudo curl -L --fail https://github.com/docker/compose/releases/download/1.29.2/run.sh -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+----
