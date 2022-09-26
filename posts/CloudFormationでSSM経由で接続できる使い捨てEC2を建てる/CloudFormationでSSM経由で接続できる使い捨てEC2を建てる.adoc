@@ -1,0 +1,118 @@
+---
+title: CloudFormationでSSM経由で接続できる使い捨てEC2を建てる
+date: 2022-09-27T07:30:00+09:00
+draft: false
+tags:
+  - Amazon EC2
+  - AWS CloudFormation
+  - AWS Systems Manager Session Manager
+  - AWS Systems Manager Parameter Store
+---
+
+= CloudFormationでSSM経由で接続できる使い捨てEC2を建てる
+
+実験用の使い捨てEC2を建てたくなることが多々あるため、CloudFormationでデフォルトVPCにEC2を簡単に建てるメモ。
+
+== 準備
+
+CloudFomationのTemplateを用意する。  +
+Templateでは以下のリソースを作成している。
+
+* InstanceProfileに紐づけるRoleの作成。ポリシーにはAmazonSSMManagedInstanceCOreを付与してSSM経由で接続できるようにする。
+* Outboundだけ許可するSG
+* KeyPair(後でSSMParameterStoreから鍵を取得する)
+* DockerインストールのUserDataを含んだLaunchTemplate(UserDataをコンソールから確認したいため)
+* EC2
+
+.ec2.yml
+[source,yml]
+----
+include::ec2.yml[]
+----
+
+== 手順
+
+1. リソース作成
+2. 起動しているEC2のインスタンスIDの取得
+3. SSMParameterStoreに格納されたキーペアのパスを取得
+4. 生成したKeyPairのプライベートキーを取得
+5. SSMを使用してポートフォワード開始
+6. EC2に接続
+7. リソース削除
+
+=== 1. リソース作成
+
+.cmd
+[source,cmd]
+----
+aws cloudformation deploy --template-file ./ec2.yml --stack-name sample-ec2 --capabilities CAPABILITY_NAMED_IAM
+----
+
+=== 2. 起動しているEC2のインスタンスIDの取得
+
+.cmd
+[source,cmd]
+----
+aws ec2 describe-instances --filter "Name=instance-state-name,Values=running" "Name=tag:Name,Values=sample-ec2-Ec2" --query "Reservations[0].Instances[0].InstanceId" --output text
+----
+
+.結果
+[source,cmd]
+----
+C:\Users\szk>aws ec2 describe-instances --filter "Name=tag:Name,Values=sample-ec2-Ec2" --query "Reservations[0].Instances[0].InstanceId" --output text
+i-06ca26d6c01bfdf03
+----
+
+=== 3. SSMParameterStoreに格納されたキーペアのパスを取得
+
+.cmd
+[source,cmd]
+----
+aws cloudformation describe-stacks --stack-name sample-ec2 --query "Stacks[0].Outputs[?OutputKey==`KeyPairPath`].OutputValue" --output text
+----
+
+.結果
+[source,cmd]
+----
+C:\Users\szk>aws cloudformation describe-stacks --stack-name sample-ec2 --query "Stacks[0].Outputs[?OutputKey==`KeyPairPath`].OutputValue" --output text
+/ec2/keypair/key-0ec16c1a1e6b69305
+----
+
+=== 4. 生成したKeyPairのプライベートキーを取得
+
+.cmd
+[source,cmd]
+----
+aws ssm get-parameter --name "/ec2/keypair/key-0ec16c1a1e6b69305" --with-decryption --query "Parameter.Value" --output text > ec2.key
+----
+
+=== 5. SSMを使用してポートフォワード開始
+
+.cmd
+[source,cmd]
+----
+aws ssm start-session --target i-06ca26d6c01bfdf03 --document-name AWS-StartPortForwardingSession --parameters "{\"portNumber\":[\"22\"],\"localPortNumber\":[\"10022\"]}"
+----
+
+=== 6. EC2に接続
+
+.cmd
+[source,cmd]
+----
+ssh -i ec2.key -p 10022 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@localhost
+----
+
+=== 7. リソース削除
+
+.cmd
+[source,cmd]
+----
+aws cloudformation delete-stack --stack-name sample-ec2
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html[AWS::EC2::KeyPair]
+* https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/user-data.html[起動時に Linux インスタンスでコマンドを実行する]
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ssm/get-parameter.html[AWS CLI Command Reference/aws/ssmget-parameter]
+* https://aws.amazon.com/jp/blogs/news/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/[AWS Systems Manager Parameter Store を使用して最新の Amazon Linux AMI IDを取得する]
