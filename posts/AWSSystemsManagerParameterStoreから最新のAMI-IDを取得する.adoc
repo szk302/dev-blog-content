@@ -1,0 +1,176 @@
+---
+title: AWSSystemsManagerParameterStoreから最新のAMI-IDを取得する
+date: 2022-09-28T07:38:00+09:00
+draft: false
+tags:
+  - AmazonLinux2
+  - AWS Systems Manager Parameter Store
+  - AWS Systems Manager Parameter Store
+---
+
+= AWSSystemsManagerParameterStoreから最新のAMI-IDを取得する
+
+いつの間にかParameterStoreから最新のAMI-IDを取得できるようになっていたためメモ
+
+各AWSサービスで使用できるPublicパラメータというものがParameterStoreで公開されている。 +
+ParameterStoreからは以下の用に各サービスに対応するパラメータが取得できる
+
+* `ami-amazon-linux-latest`
+* `ami-windows-latest`
+* `ami-macos-latest`
+* `appmesh`
+* `aws-for-fluent-bit`
+* `bottlerocket`
+* `canonical`
+* `cloud9`
+* `datasync`
+* `debian`
+* `ecs`
+* `eks`
+* `freebsd`
+* `global-infrastructure`
+* `marketplace`
+* `storagegateway`
+
+各サービスのパラメータのパスは `aws ssm get-parameters-by-path --path /aws/service/list` で取得できる。
+
+== AMI-IDの取得
+
+今回はAMI-IDを取得する。
+
+.amiでgrep
+[source,cmd]
+----
+C:\Users\szk>aws ssm get-parameters-by-path --path /aws/service/list | grep ami
+            "Name": "/aws/service/list/ami-amazon-linux-latest",
+            "Value": "/aws/service/ami-amazon-linux-latest/",
+            "ARN": "arn:aws:ssm:ap-northeast-1::parameter/aws/service/list/ami-amazon-linux-latest",
+            "Name": "/aws/service/list/ami-windows-latest",
+            "Value": "/aws/service/ami-windows-latest/",
+            "ARN": "arn:aws:ssm:ap-northeast-1::parameter/aws/service/list/ami-windows-latest",
+----
+
+サービスごとのパラメータのグループのリストが出るので、取得したいパラメータを更に取得
+
+.AmazonLinuxのAMIのパラメータ名
+[source,cmd]
+----
+C:\Users\szk>aws ssm get-parameters-by-path --path /aws/service/ami-amazon-linux-latest --query sort(Parameters[].Name)
+[
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-kernel-5.15-arm64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-kernel-5.15-x86_64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-kernel-default-arm64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-kernel-default-x86_64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-minimal-kernel-5.15-arm64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-minimal-kernel-5.15-x86_64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-minimal-kernel-default-arm64",
+    "/aws/service/ami-amazon-linux-latest/al2022-ami-minimal-kernel-default-x86_64",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-s3",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-minimal-hvm-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-minimal-hvm-x86_64-s3",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-minimal-pv-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-minimal-pv-x86_64-s3",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-pv-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn-ami-pv-x86_64-s3",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-arm64-gp2",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-kernel-5.10-hvm-arm64-gp2",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-kernel-5.10-hvm-x86_64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-kernel-5.10-hvm-x86_64-gp2",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-minimal-hvm-arm64-ebs",
+    "/aws/service/ami-amazon-linux-latest/amzn2-ami-minimal-hvm-x86_64-ebs"
+]
+----
+
+
+.Japaneseが含まれているWindowsのAMIのパラメータ名
+[source,cmd]
+----
+C:\Users\szk>aws ssm get-parameters-by-path --path /aws/service/ami-windows-latest/ --query "sort(Parameters[?contains(@.Name, `Japanese`)].Name)"
+[
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-Base",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2014_SP3_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2014_SP3_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP2_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP2_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP2_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP2_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP3_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP3_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP3_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-SQL_2016_SP3_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-RTM-Japanese-64Bit-Base",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-RTM-Japanese-64Bit-SQL_2014_SP3_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-RTM-Japanese-64Bit-SQL_2014_SP3_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2012-RTM-Japanese-64Bit-SQL_2014_SP3_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-Base",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP2_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP2_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP2_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP2_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP3_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP3_Express",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP3_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2016_SP3_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2017_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2017_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2017_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2019_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2019_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-SQL_2019_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-Base",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2017_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2017_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2017_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2019_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2019_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-SQL_2019_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-Base",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2017_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2017_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2017_Web",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2019_Enterprise",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2019_Standard",
+    "/aws/service/ami-windows-latest/Windows_Server-2022-Japanese-Full-SQL_2019_Web"
+]
+----
+
+== CloudFormationで使用したい場合
+
+Parametersに設定することで使用できた。
+
+[source,yml]
+----
+Parameters:
+  latestAmazonLinux2AmiId:
+    Type : AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+# ~ 省略 ~
+Resources:
+  Ec2:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: !Ref latestAmazonLinux2AmiId
+      InstanceType: t2.micro
+      KeyName: !Ref Ec2KeyPair
+      SecurityGroupIds:
+        - !Ref Ec2SecurityGroup
+      IamInstanceProfile:
+        !Ref Ec2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-Ec2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref Ec2LaunchTemplate
+        Version: !GetAtt Ec2LaunchTemplate.LatestVersionNumber
+----
+
+== 参考
+
+* https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-stkore-finding-public-parameters.html[AWS/Documentation/AWS Systems Manager/User Guide]
+* https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/finding-an-ami.html[AWS/ドキュメント/Amazon EC2/Linux インスタンス用ユーザーガイド/Linux AMI の検索]
+* https://aws.amazon.com/jp/blogs/news/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/[AWS Systems Manager Parameter Store を使用して最新の Amazon Linux AMI IDを取得する]
+* https://aws.amazon.com/jp/blogs/mt/integrating-aws-cloudformation-with-aws-systems-manager-parameter-store/[AWS CloudFormation と AWS Systems Manager パラメータストアの統合]
