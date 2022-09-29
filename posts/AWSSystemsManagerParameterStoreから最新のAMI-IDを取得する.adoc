@@ -138,6 +138,13 @@ C:\Users\szk>aws ssm get-parameters-by-path --path /aws/service/ami-windows-late
 ]
 ----
 
+.AMI-IDを取得
+[source,cmd]
+----
+C:\Users\szk>aws ssm get-parameters --names /aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-Japanese-64Bit-Base --query Parameters[0].Value --output text
+ami-0934175dc4cd00d6e
+----
+
 == CloudFormationで使用したい場合
 
 Parametersに設定することで使用できた。
