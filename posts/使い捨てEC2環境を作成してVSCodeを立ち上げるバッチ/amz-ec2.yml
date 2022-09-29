@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create EC2 Instance
+Parameters:
+  latestAmazonLinux2AmiId:
+    Type : AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  instanceType:
+    Type : String
+    Default: t3.large
+Resources:
+  Ec2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+  Ec2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref Ec2Role
+  Ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EC2SecurityGroup
+      # VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-Ec2SecurityGroup
+  Ec2SecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      IpProtocol: -1
+      CidrIp: 0.0.0.0/0
+      GroupId: !GetAtt Ec2SecurityGroup.GroupId
+  Ec2SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: -1
+      CidrIp: 127.0.0.1/32
+      GroupId: !GetAtt Ec2SecurityGroup.GroupId
+  Ec2KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Sub ${AWS::StackName}-KeyPair
+  Ec2LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-LaunchTemplate
+      LaunchTemplateData:
+        UserData:
+          Fn::Base64: |-
+            #!/bin/bash
+            yum update -y
+            amazon-linux-extras install docker -y
+            systemctl enable docker
+            systemctl start docker
+            usermod -aG docker ec2-user
+            curl -L --fail https://github.com/docker/compose/releases/download/1.29.2/run.sh -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+  Ec2:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: !Ref latestAmazonLinux2AmiId
+      InstanceType: !Ref instanceType
+      KeyName: !Ref Ec2KeyPair
+      SecurityGroupIds:
+        - !Ref Ec2SecurityGroup
+      IamInstanceProfile:
+        !Ref Ec2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}
+      LaunchTemplate:
+        LaunchTemplateId: !Ref Ec2LaunchTemplate
+        Version: !GetAtt Ec2LaunchTemplate.LatestVersionNumber
+Outputs:
+  Ec2InstanceId:
+    Value: !Ref Ec2
+    Export:
+      Name: !Sub ${AWS::StackName}-Ec2InstanceId
+  KeyPairId:
+    Value: !GetAtt Ec2KeyPair.KeyPairId
+    Export:
+      Name: !Sub ${AWS::StackName}-KeyPairId
+  KeyPairPath:
+    Value: !Sub
+      - /ec2/keypair/${KeyPairId}
+      - KeyPairId: !GetAtt Ec2KeyPair.KeyPairId
+    Export:
+      Name: !Sub ${AWS::StackName}-KeyPairPath
