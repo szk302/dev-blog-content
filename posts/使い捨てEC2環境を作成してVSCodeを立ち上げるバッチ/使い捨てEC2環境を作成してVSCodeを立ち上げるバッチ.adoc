@@ -85,3 +85,8 @@ include::scripts/StartSandboxAmzLinuxEc2.ps1[]
 === 削除
 
 * *Delete-${インスタンス名}.bat* をクリック
+
+== 参考
+
+* https://code.visualstudio.com/docs/remote/troubleshooting#_connect-to-a-remote-host-from-the-terminal[Visual Studio Code/Docs/Remote/Remote Development Tips and Tricks
+#Connect to a remote host from the terminal]
