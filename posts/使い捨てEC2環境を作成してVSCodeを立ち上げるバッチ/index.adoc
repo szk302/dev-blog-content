@@ -1,0 +1,92 @@
+---
+title: 使い捨てEC2環境を作成してVSCodeを立ち上げるバッチ
+date: 2022-10-01T07:33:00+09:00
+draft: false
+tags:
+  - Visual Studio Code
+  - VSCode
+  - Amazon EC2
+  - AWS Systems Manager Session Manager
+  - SSH
+---
+
+= 使い捨てEC2環境を作成してVSCodeを立ち上げるバッチ
+
+使い捨て環境をサクッと作りたくてバッチを適当に書いた。
+
+実行するとSSM経由で接続できるEC2を起動し、SSHの設定と共にKeyPairを取得して配置してVSCodeをリモートモードで起動する。 +
+起動と同時に以下のようなバッチも生成し簡単に削除できるようにした。
+
+.Delete-{インスタンス名}.bat
+[source,bat]
+----
+@REM SSHConfの削除
+@RD /S /Q "C:\Users\szk/.ssh/conf.d/ephemeral/amz-ec2-20220930072729"
+@REM リソースの削除
+aws cloudformation delete-stack --stack-name "amz-ec2-20220930072729"
+@DEL %0
+----
+
+== 準備
+
+VSCodeからSSH経由接続するため、バッチ実行時に以下のディレクトリにSSH設定の設定のプライベートキーを出力する。
+
+* ~/.ssh/conf.d/ephemeral/${インスタンス名}
+
+この設定を有効化するためには予め *~/.ssh/confg* に以下の設定を追加してインポートできるようにする。
+
+.(例)~/.ssh/config
+[source,conf]
+----
+Include conf.d/hosts/*
+Include conf.d/ephemeral/*/*.conf
+----
+
+== 内容
+
+1. StartSandboxAmzLinuxEc2.bat: エントリーポイントのバッチ
+2. amz-ec2.yml: EC2を起動するためのCloudFormation template
+3. scripts/StartSandboxAmzLinuxEc2.ps1: 処理を記述したスクリプト
+
+.ディレクトリ構成
+[source,sh]
+----
+./
+├── StartSandboxAmzLinuxEc2.bat
+├── amz-ec2.yml
+└── scripts
+    └── StartSandboxAmzLinuxEc2.ps1
+----
+
+.1. StartSandboxAmzLinuxEc2.bat
+[source,bat]
+----
+include::StartSandboxAmzLinuxEc2.bat[]
+----
+
+.2. amz-ec2.yml
+[source,yml]
+----
+include::amz-ec2.yml[]
+----
+
+.3.scripts/StartSandboxAmzLinuxEc2.ps1
+[source,ps1]
+----
+include::scripts/StartSandboxAmzLinuxEc2.ps1[]
+----
+
+== 実行
+
+=== 作成
+
+* *StartSandboxAmzLinuxEc2.bat* をクリック
+
+=== 削除
+
+* *Delete-${インスタンス名}.bat* をクリック
+
+== 参考
+
+* https://code.visualstudio.com/docs/remote/troubleshooting#_connect-to-a-remote-host-from-the-terminal[Visual Studio Code/Docs/Remote/Remote Development Tips and Tricks
+#Connect to a remote host from the terminal]
