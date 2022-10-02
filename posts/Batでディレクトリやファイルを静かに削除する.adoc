@@ -1,0 +1,43 @@
+---
+title: Batでディレクトリやファイルを静かに削除する
+date: 2022-10-03T05:30:00+09:00
+draft: false
+tags:
+  - Bat
+  - バッチ
+---
+
+= Batでディレクトリやファイルを静かに削除する
+
+ディレクトリやファイルをコンソール非表示で強制削除したい()
+
+.ディレクトリの削除
+[source,bat]
+----
+rd /s /q %dirPath%
+----
+
+.ファイルの削除
+[source,bat]
+----
+del /q %filePath%
+----
+
+.ディレクトリの削除(ディレクトリがあるなし関係なく)
+[source,bat]
+----
+if exist %dirPath% ( rd /s /q %dirPath% )
+----
+
+.ファイルの削除(ファイルがあるなし関係なく)
+[source,bat]
+----
+if exist %filePath% ( del /q %filePath% )
+----
+
+WARNING: delにも/sがあるが、オプションの意味が違いサブディレクトリを含めてファイルを削除するため注意
+
+== 参考
+
+* https://learn.microsoft.com/ja-jp/windows-server/administration/windows-commands/rd[Microsoft Ignite/Learn/Windows Server/Windows のコマンド/関連項目/rd]
+* https://learn.microsoft.com/ja-jp/windows-server/administration/windows-commands/del[Microsoft Ignite/Learn/Windows Server/Windows のコマンド/関連項目/del]
