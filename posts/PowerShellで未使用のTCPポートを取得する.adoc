@@ -1,0 +1,37 @@
+---
+title: PowerShellで未使用のTCPポートを取得する
+date: 2022-10-03T08:38:00+09:00
+draft: false
+tags:
+  - PowerShell
+  - Get-Random
+  - Get-NetTCPConnection
+---
+
+= PowerShellで未使用のTCPポートを取得する
+
+PowerShellを使用して未使用のTCPポートを取得したい。
+
+== 方法
+
+Get-NetTCPConnectionで使用中のポート番号のListを取得し使用されていないポートを探す。
+
+.1024から順に開いているポート番号を探し取得
+[source,ps1]
+----
+# 開いているポート番号の取得
+$MIN = 1024
+$MAX = 65535
+$usedPortList = Get-NetTCPConnection | Select-Object -Property LocalPort
+for($i=$MIN; $i -le $MAX; $i++) {
+  if(!($usedPortList.Contains($i))){
+    $port=$i
+    break;
+  }
+}
+echo "port:${port}"
+----
+
+== 参考
+
+* https://learn.microsoft.com/ja-jp/powershell/module/nettcpip/get-nettcpconnection?view=windowsserver2022-ps[Learn/Windows/PowerShell/Reference/NetTCPIP/Get-NetTCPConnection]
