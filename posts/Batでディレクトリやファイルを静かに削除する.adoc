@@ -5,6 +5,8 @@ draft: false
 tags:
   - Bat
   - バッチ
+  - del
+  - rd
 ---
 
 = Batでディレクトリやファイルを静かに削除する
