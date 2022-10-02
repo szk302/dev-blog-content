@@ -1,0 +1,22 @@
+---
+title: PowerShellでStart-Processを使用して複数のオプションとともにコマンドを実行する
+date: 2022-10-03T07:42:00+09:00
+draft: false
+tags:
+  - PowerShell
+  - Start-Process
+---
+
+= PowerShellでStart-Processを使用して複数のオプションとともにコマンドを実行する
+
+オプション *-ArgumentList*を指定し、複数のパラメータの場合は *,* で区切る
+
+.例
+[source,ps1]
+----
+Start-Process -FilePath aws.exe -ArgumentList 'ssm','start-session','--target',"${instanceId}",'--document-name','AWS-StartPortForwardingSession','--parameters',"{\`"portNumber\`":[\`"22\`"],\`"localPortNumber\`":[\`"${port}\`"]}" -Wait
+----
+
+== 参考
+
+* https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.management/start-process?view=powershell-7.2[Microsoft Ignite/Learn/PowerShell/スクリプトの作成/Reference/Microsoft.PowerShell.Management/Start-Process]
