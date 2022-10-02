@@ -38,7 +38,6 @@ VSCodeからSSH経由接続するため、バッチ実行時に以下のディ�
 .(例)~/.ssh/config
 [source,conf]
 ----
-Include conf.d/hosts/*
 Include conf.d/ephemeral/*/*.conf
 ----
 
