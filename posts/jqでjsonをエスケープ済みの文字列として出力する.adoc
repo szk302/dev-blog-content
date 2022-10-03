@@ -1,0 +1,74 @@
+---
+title: jqでjsonをエスケープ済みの文字列として出力する
+date: 2022-10-03T08:58:00+09:00
+draft: false
+tags:
+  - jq
+---
+
+= jqでjsonをエスケープ済みの文字列として出力する
+
+jqでjsonファイルを文字列として出力したい。
+
+== 対応
+
+*@json* オプションを使用する
+
+.message.json
+[source,txt]
+----
+{
+  "id": "xyz",
+  "type": "TYPE",
+  "body": "あいうえお。\nかきくけこ。",
+  "nest":{
+    "key": "サシスセソ。\nタチツテト。",
+    "array": [
+      "なにぬねの\tはっひふっへほ～"
+    ]
+  }
+}
+----
+
+.cmd
+[source,cmd]
+----
+C:\Users\szk\github\szk302\work>cat message.json | jq "@json"
+----
+
+.結果
+[source,cmd]
+----
+C:\Users\szk\github\szk302\work>cat message.json | jq "@json"
+"{\"id\":\"xyz\",\"type\":\"TYPE\",\"body\":\"あいうえお。\\nかきくけこ。\",\"nest\":{\"key\":\"サシ
+スセソ。\\nタチツテト。\",\"array\":[\"なにぬねの\\tはっひふっへほ～\"]}}"
+----
+
+元に戻す場合はfromjsonを使用する
+
+.cmd
+[source,cmd]
+----
+cat message.json | jq "@json" | jq "fromjson"
+----
+
+.結果
+[source,json]
+----
+C:\Users\szk\github\szk302\work>cat message.json | jq "@json" | jq "fromjson"
+{
+  "id": "xyz",
+  "type": "TYPE",
+  "body": "あいうえお。\nかきくけこ。",
+  "nest": {
+    "key": "サシスセソ。\nタチツテト。",
+    "array": [
+      "なにぬねの\tはっひふっへほ～"
+    ]
+  }
+}
+----
+
+== 参考
+
+* https://stedolan.github.io/jq/manual/[jq Manual (development version)]
