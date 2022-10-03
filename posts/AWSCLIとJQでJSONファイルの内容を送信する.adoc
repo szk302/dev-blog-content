@@ -44,8 +44,6 @@ QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
 
 --message-bodyに *file://${JSONのファイルパス}* のような形式で指定する。
 
-bashの場合はfileのパス指定で送信できた。
-
 NOTE: 次のエラーメッセージが出る場合はJSONファイルの文字コードに注意。 [Error parsing parameter '--message-body': Unable to load paramfile (message.json), text contents could not be decoded.  If this is a binary file, please use the fileb:// 
 prefix instead of the file:// prefix.]
 
