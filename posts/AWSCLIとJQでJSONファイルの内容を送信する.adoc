@@ -1,0 +1,131 @@
+---
+title: AWSCLIとJQでJSONファイルの内容を送信する
+date: 2022-10-04T08:27:00+09:00
+draft: false
+tags:
+  - AWS
+  - Amazon SQS
+  - AWS CLI
+  - jq
+---
+
+= AWSCLIとJQでJSONファイルの内容を送信する
+
+== 準備
+
+1. メッセージを用意
++
+[source,json]
+----
+{
+  "id": "xyz",
+  "type": "TYPE",
+  "body": "あいうえお。\nかきくけこ。",
+  "nest":{
+    "key": "サシスセソ。\nタチツテト。",
+    "array": [
+      "なにぬねの\tはっひふっへほ～"
+    ]
+  }
+}
+----
+2. Queueを作成
++
+[source,bash]
+----
+QUEUE_NAME="my-queue"
+## Queueの作成
+aws sqs create-queue --queue-name ${QUEUE_NAME}
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+----
+
+== 方法
+
+--message-bodyに *file://${JSONのファイルパス}* のような形式で指定する。
+
+bashの場合はfileのパス指定で送信できた。
+
+NOTE: 次のエラーメッセージが出る場合はJSONファイルの文字コードに注意。 [Error parsing parameter '--message-body': Unable to load paramfile (message.json), text contents could not be decoded.  If this is a binary file, please use the fileb:// 
+prefix instead of the file:// prefix.]
+
+=== 送信
+
+.メッセージ送信(bash)
+[source,bash]
+----
+aws sqs send-message --queue-url "${QUEUE_URL}" --message-body "file://message.json"
+----
+
+.結果
+[source,bash]
+----
+aws sqs send-message --queue-url "${QUEUE_URL}" --message-body "file://message.json"
+{
+    "MD5OfMessageBody": "8479748f7b5224df6596bb8766113b7d",
+    "MessageId": "c8ac739e-6737-4d28-b6f3-fbe0ce2887fa"
+}
+----
+
+=== 受信
+
+.メッセージ受信(bash)
+[source,bash]
+----
+aws sqs receive-message --queue-url "${QUEUE_URL}" > resp.json
+----
+
+.resp.json
+[source,json]
+----
+{
+    "Messages": [
+        {
+            "MessageId": "eabd6944-235c-4c96-9f31-1bf43992445a",
+            "ReceiptHandle": "AQEBdVJhStsAWRu9+/Hel+58Va+BM5oxkkeo18kdPk1zWuA5fIBpUJY7Z1+8RBi78nCjOoSjDaQmi1828H5zLJNCTETInI1pIVJjHP+Ocdxw6yUWkTxM6YZLWBwPjOM55wWH6SZR4AHBl0FzlfUvCcW7IXHABz8OUOVktlP8LAwKFhGYwXA4YFDcqZzVb5DGO6cm8MsDnyIi6+uzeuqmxjeizui5MoPCS8EA4a0tJjbTlqkWlmbOswc6JIs9EjsLRV6llPe/Dzbc4tSJclZtkMfALIK687J5iCDuL/v/cJHgWkoPCvn73dHzsJqpsRXXbqDInoCEsOSDjkMNlq1c3zpFQ7jNTteNHOYECK6s7iuOhk1ZtLh1CIJWReHHQa6nBAa/5IjB2l0ed58ylCAAXWxaaw==",
+            "MD5OfBody": "8479748f7b5224df6596bb8766113b7d",
+            "Body": "{\n  \"id\": \"xyz\",\n  \"type\": \"TYPE\",\n  \"body\": \"あいうえお。\\nかきくけこ。\",\n  \"nest\":{\n    \"key\": \"サシスセソ。\\nタチツテト。\",\n    \"array\": [\n      \"なにぬねの\\tはっひふっへほ～\"\n    ]\n  }\n}"
+        }
+    ]
+}
+----
+
+==== Bodyの取り出し
+
+Bodyに送信したJsonの内容が含まれているが、エスケープされた状態なのでjqのfromjsonを使用して元に戻す。
+
+.Bodyを取り出す(bash)
+[source,bash]
+----
+cat resp.json | jq -r '.Messages[0].Body | fromjson'
+----
+
+.結果
+[source,bash]
+----
+cat resp.json | jq -r '.Messages[0].Body | fromjson'
+{
+  "id": "xyz",
+  "type": "TYPE",
+  "body": "あいうえお。\nかきくけこ。",
+  "nest": {
+    "key": "サシスセソ。\nタチツテト。",
+    "array": [
+      "なにぬねの\tはっひふっへほ～"
+    ]
+  }
+}
+----
+
+== Clean
+
+.Queueの削除(bash)
+[source,bash]
+----
+aws sqs delete-queue --queue-url ${QUEUE_URL}
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sqs/index.html[AWS CLI Command Reference/aws/sqs]
+* https://stedolan.github.io/jq/manual/[jq Manual (development version)/to_entries, from_entries, with_entries]
