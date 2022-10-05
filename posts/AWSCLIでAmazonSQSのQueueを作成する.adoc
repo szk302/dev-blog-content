@@ -1,0 +1,67 @@
+---
+title: AWSCLIでAmazonSQSのQueueを作成する
+date: 2022-10-05T08:58:00+09:00
+draft: false
+tags:
+  - AWS
+  - Amazon SQS
+  - AWS CLI
+---
+
+= AWSCLIでAmazonSQSのQueueを作成する
+
+== 手順
+
+=== 作成
+
+==== 標準Queue
+
+.標準Queueを作成
+[source,bash]
+----
+QUEUE_NAME="my-queue"
+## Queueの作成
+aws sqs create-queue --queue-name ${QUEUE_NAME}
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+----
+
+==== FIFOQueue
+
+FIFOQueueを作成する場合はQueue名の最後に *.fifo* を付与し、属性に *FifoQueue=true* を指定する。
+
+.FIFOQueueを作成
+[source,bash]
+----
+QUEUE_NAME="my-queue.fifo"
+## Queueの作成
+aws sqs create-queue --queue-name ${QUEUE_NAME} --attributes FifoQueue=true
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+----
+
+NOTE: Queue名は1-80文字
+
+=== ロングポーリング設定
+
+.ReceiveMessageWaitTimeSecondsを設定(20秒)
+[source,bash]
+----
+QUEUE_NAME="my-queue.fifo"
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+aws sqs set-queue-attributes --queue-url "${QUEUE_URL}" --attributes ReceiveMessageWaitTimeSeconds=20
+----
+
+=== 削除
+
+.Queueの削除(bash)
+[source,bash]
+----
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+aws sqs delete-queue --queue-url ${QUEUE_URL}
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sqs/index.html[AWS CLI Command Reference/aws/sqs]
