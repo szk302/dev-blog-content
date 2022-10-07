@@ -22,8 +22,6 @@ tags:
 QUEUE_NAME="my-queue"
 ## Queueの作成
 aws sqs create-queue --queue-name ${QUEUE_NAME}
-## QueueのURL取得
-QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
 ----
 
 ==== FIFOQueue
@@ -33,16 +31,18 @@ FIFOQueueを作成する場合はQueue名の最後に *.fifo* を付与し、属
 .FIFOQueueを作成
 [source,bash]
 ----
-QUEUE_NAME="my-queue.fifo"
+QUEUE_NAME="dead-letter-my-queue.fifo"
 ## Queueの作成
 aws sqs create-queue --queue-name ${QUEUE_NAME} --attributes FifoQueue=true
-## QueueのURL取得
-QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
 ----
 
 NOTE: Queue名は1-80文字
 
-=== ロングポーリング設定
+=== 属性指定
+
+==== メッセージ受信待機時間20秒(ロングポーリング設定)
+
+ReceiveMessageWaitTimeSeconds:: メッセージ受信待機時間
 
 .ReceiveMessageWaitTimeSecondsを設定(20秒)
 [source,bash]
@@ -53,11 +53,57 @@ QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
 aws sqs set-queue-attributes --queue-url "${QUEUE_URL}" --attributes ReceiveMessageWaitTimeSeconds=20
 ----
 
-=== 削除
+==== 複数指定(メッセージ受信待機時間とロングポーリング設定とコンテンツベースの重複削除)
 
-.Queueの削除(bash)
+ReceiveMessageWaitTimeSeconds:: メッセージ受信待機時間
+ContentBasedDeduplication:: コンテンツベースの重複削除
+
+.ReceiveMessageWaitTimeSecondsを設定(20秒)
 [source,bash]
 ----
+QUEUE_NAME="my-queue.fifo"
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+aws sqs set-queue-attributes --queue-url "${QUEUE_URL}" --attributes ReceiveMessageWaitTimeSeconds=20,ContentBasedDeduplication=true
+----
+
+NOTE:: コンテンツベースの重複削除はFIFOキューのみ。標準Queueで実行した場合以下のエラーメッセージが表示された
++
+[source,bash]
+----
+An error occurred (InvalidAttributeName) when calling the SetQueueAttributes operation: Unknown Attribute ContentBasedDeduplication.
+----
+
+==== デッドレターキュー指定
+
+[source,bash]
+----
+QUEUE_NAME="my-queue.fifo"
+## QueueのURL取得
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+## デッドレターキュー設定(※エスケープが非常に見にくいのでjsonファイルで登録したほうがよい...)
+aws sqs set-queue-attributes --queue-url "${QUEUE_URL}" --attributes "ReceiveMessageWaitTimeSeconds=20,ContentBasedDeduplication=true,RedrivePolicy=\"{\\\"deadLetterTargetArn\\\":\\\"${QUEUE_ARN}\\\",\\\"maxReceiveCount\\\":\\\"1000\\\"}\\\""
+----
+
+=== 情報の取得
+
+==== ARNの取得
+
+.QueueArnの取得
+[source,bash]
+----
+QUEUE_NAME="my-queue.fifo"
+QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
+QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "${QUEUE_URL}" --attribute-names QueueArn --query Attributes.QueueArn --output text)
+echo "${QUEUE_ARN}"
+----
+
+=== 削除
+
+.Queueの削除
+[source,bash]
+----
+QUEUE_NAME="my-queue.fifo"
 QUEUE_URL=$(aws sqs get-queue-url --queue-name ${QUEUE_NAME} --output text)
 aws sqs delete-queue --queue-url ${QUEUE_URL}
 ----
