@@ -31,7 +31,7 @@ FIFOQueueを作成する場合はQueue名の最後に *.fifo* を付与し、属
 .FIFOQueueを作成
 [source,bash]
 ----
-QUEUE_NAME="dead-letter-my-queue.fifo"
+QUEUE_NAME="my-queue.fifo"
 ## Queueの作成
 aws sqs create-queue --queue-name ${QUEUE_NAME} --attributes FifoQueue=true
 ----
