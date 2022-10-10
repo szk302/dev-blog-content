@@ -1,0 +1,36 @@
+---
+title: PowerShellでBashのコマンド置換のようなことをしたい
+date: 2022-10-11T08:48:00+09:00
+draft: false
+tags:
+  - PowerShell 
+  - 部分式演算子(Subexpression operator)
+  - コマンド置換(Command substitution)
+---
+
+= PowerShellでBashのコマンド置換のようなことをしたい
+
+Bashと同じように、変数なしでコマンドの結果を文字列結合させたい。
+
+== 方法
+
+部分式演算子(Subexpression operator)を利用する
+
+.日付をファイル名にする
+[source,ps1]
+----
+$FILE_NAME="prefix_$(Get-Date -Format "yyyyMMdd_hhmmss").txt"
+echo "${FILE_NAME}"
+----
+
+.結果
+[source,console]
+----
+PS C:\Users\szk> $FILE_NAME="prefix_$(Get-Date -Format "yyyyMMdd_hhmmss").txt"
+PS C:\Users\szk> echo "${FILE_NAME}"
+prefix_20221011_084635.txt
+----
+
+== 参考
+
+* https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.2#subexpression-operator--[Microsoft Ignite/Learn/PowerShell/スクリプトの作成/about_Operators#Subexpression 演算子 $( )]
