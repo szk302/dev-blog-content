@@ -1,0 +1,108 @@
+---
+title: AWSCLIを使用してAmazonSES経由でHTMLフォーマットのメールを送信する
+date: 2022-10-12T23:50:00+09:00
+draft: false
+tags:
+  - AWS
+  - AWS CLI
+  - Amazon SES
+  - SES
+  - jq
+---
+
+= AWSCLIを使用してAmazonSES経由でHTMLフォーマットのメールを送信する
+
+CLIでHTMLフォーマットのメールを送る方法を調査
+
+== 方法
+
+オプション *--message* を使用することで送信可能。
+文字列で渡すのが面倒なのでtemplateのJSON(message.json)を用意しjqでHTMLを入れ込んで送信
+
+=== 準備
+
+送信する内容とCLIに渡すJSONのテンプレートを用意
+
+.message.json
+[source,json]
+----
+include::message.json[]
+----
+
+.message.html
+[source,html]
+----
+include::message.html[]
+----
+
+=== 実行
+
+.AWSCLIでHTMLフォーマットのメールを送信(Bash)
+[source,bash]
+----
+fromMailAddress=szk302@example.com
+toMailAddress=szk302@example.com
+message=$(jq '.Body.Html.Data |=$value' --rawfile value ./message.html ./message.json)
+aws ses send-email --to "${toMailAddress}" --from "${fromMailAddress}" --message "${message}"
+----
+
+=== 結果
+
+.受信メールのBody抜粋(Gmailでメッセージのソースを表示)
+[source,txt]
+----
+Subject: Test email sent using the AWS CLI
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_Part_3110996_18143199.1665585584268"
+Message-ID: <00000000aaa00000-a0a0aaa0-00a0-0aa0-00a0-aaaaaaaaaaaa-000000@ap-northeast-1.amazonses.com>
+Date: Wed, 12 Oct 2022 14:39:44 +0000
+Feedback-ID: 1.ap-northeast-1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=:AmazonSES
+X-SES-Outgoing: 2022.10.12-23.251.234.1
+
+------=_Part_3110996_18143199.1665585584268
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+This is the message body in text format.
+------=_Part_3110996_18143199.1665585584268
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html lang=3D"ja">
+
+<head>
+  <meta charset=3D"UTF-8">
+  <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1.0">
+  <title>HTML=E5=BD=A2=E5=BC=8F=E3=81=AE=E3=82=B5=E3=83=B3=E3=83=97=E3=83=
+=AB=E3=83=A1=E3=83=BC=E3=83=AB</title>
+</head>
+
+<body>
+  <table>
+    <tr>
+      <td>=E3=81=82</td>
+      <td>=E3=81=84</td>
+      <td>=E3=81=86</td>
+      <td>=E3=81=88</td>
+      <td>=E3=81=8A</td>
+    </tr>
+    <tr>
+      <td>=E3=81=8B</td>
+      <td>=E3=81=8D</td>
+      <td>=E3=81=8F</td>
+      <td>=E3=81=91</td>
+      <td>=E3=81=93</td>
+    </tr>
+  </table>
+</body>
+
+</html>
+------=_Part_3110996_18143199.1665585584268--
+----
+
+== 参考
+
+* https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ses/send-email.html#send-email[send-email]
