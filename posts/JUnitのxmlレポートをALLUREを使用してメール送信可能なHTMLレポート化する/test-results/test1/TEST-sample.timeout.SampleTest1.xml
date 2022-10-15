@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="sample.timeout.SampleTest1" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-10-12T23:34:52" hostname="X1" time="0.042">
+  <properties/>
+  <testcase name="testSomeLibraryMethod()" classname="sample.timeout.SampleTest1" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

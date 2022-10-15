@@ -1,0 +1,20 @@
+version: '3'
+services:
+  allure:
+    image: "frankescobar/allure-docker-service"
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: 1
+      KEEP_HISTORY: 1
+      EMAILABLE_REPORT_TITLE: Myテストレポート
+      SERVER_URL: https://www.szk302.dev/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:5050/ || exit 1"]
+      start_period: "1s" # ヘルスチェックの開始遅延
+      retries: 3
+      timeout: "5s"
+      interval: "5s"
+    ports:
+      - "5050:5050"
+    volumes:
+      - ${PWD}/test-results/test1:/app/allure-results
+      - ${PWD}/allure-reports:/app/default-reports
