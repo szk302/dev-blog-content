@@ -1,0 +1,52 @@
+---
+title: allure-docker-serviceのEmailableReportをHTMLメールとして送信する
+date: 2022-10-17T07:42:00+09:00
+draft: false
+tags:
+  - juice
+  - Allure
+  - Allure Report
+  - jq
+  - Amazon SES
+---
+
+= allure-docker-serviceのEmailableReportをHTMLメールとして送信する
+
+EmailableReportのHTMLはcssを外部から取得する形になっている。 +
+それではHTML形式のメールとして送れないためjuiceを使用してinline化しAmazonSESで送信する。
+
+== 準備
+
+以下2ファイル準備する。
+
+* AWSCLIで送るためのmessageオプションのJSON
++
+.message.json
+[source,java]
+----
+include::message.json[]
+----
+
+* レポートのHTML
++
+.report.html
+[source,html]
+----
+include::report.html[]
+----
+
+== 実行
+
+.juiceでインライン化しSESで送信(Bash)
+[source,bash]
+----
+docker run -v ${PWD}:/work node:18.11.0-alpine3.16 npx juice /work/report.html /work/inline_report.html
+fromMailAddress=szk302@example.com
+toMailAddress=szk302@example.com
+jq '.Body.Html.Data |=$value' --rawfile value ./inline_report.html ./message.json > body.json
+aws ses send-email --to "${toMailAddress}" --from "${fromMailAddress}" --message file://body.json
+----
+
+== 参考
+
+* https://github.com/Automattic/juice[Automattic/juice]
