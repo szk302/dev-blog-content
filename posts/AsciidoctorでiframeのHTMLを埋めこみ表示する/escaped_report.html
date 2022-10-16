@@ -1,0 +1,106 @@
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Myテストレポート - Allure Docker Service&lt;/title&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cosmo/bootstrap.css&quot;&gt;
+    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/static/favicon&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;container jumbotron&quot;&gt;
+        &lt;div class=&quot;display-4 lead&quot;&gt;Myテストレポート&lt;/div&gt;
+        &lt;div class=&quot;lead&quot;&gt;Allure Docker Service&lt;/div&gt;
+        &lt;br&gt;
+        &lt;ul class=&quot;list-group&quot;&gt;
+            &lt;li class=&quot;list-group-item d-flex justify-content-between align-items-center&quot;&gt;
+                Project ID
+                &lt;span class=&quot;badge badge-light badge-pill&quot;&gt;
+                    default
+                &lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;list-group-item d-flex justify-content-between align-items-center&quot;&gt;
+                Server Link
+                &lt;span class=&quot;badge badge-light badge-pill&quot;&gt;
+                    &lt;a href=&quot;https://www.szk302.dev/&quot; target=&quot;_blank&quot;&gt;https://www.szk302.dev/&lt;/a&gt;
+                &lt;/span&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;br&gt;
+        &lt;div class=&quot;table-responsive&quot;&gt;
+            &lt;table class=&quot;table table-hover&quot;&gt;
+                &lt;thead&gt;
+                    &lt;tr&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-active text-center&quot;&gt;Total&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-success text-center&quot;&gt;Passed&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-danger text-center&quot;&gt;Failed&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-warning text-center&quot;&gt;Broken&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-light text-center&quot;&gt;Skipped&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;table-dark text-center&quot;&gt;Unknown&lt;/th&gt;
+                    &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;
+                    &lt;tr&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;2&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;1 (50.00%)&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;1 (50.00%)&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;0 (0.00%)&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;0 (0.00%)&lt;/th&gt;
+                        &lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;0 (0.00%)&lt;/th&gt;
+                    &lt;/tr&gt;
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+        &lt;hr class=&quot;my-4&quot;&gt;
+        &lt;div class=&quot;card border-secondary mb-3 border-success&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;
+                testSomeLibraryMethod()
+                &lt;span class=&quot;badge badge-pill badge-success&quot;&gt;passed&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;!-- CARD TEXT --&gt;
+                &lt;p class=&quot;card-text&quot;&gt;
+                    &lt;b&gt;description:&lt;/b&gt;
+                    &lt;br&gt;
+                    &lt;b&gt;duration:&lt;/b&gt; 0.042 s
+                    &lt;br&gt;
+                    &lt;b&gt;severity:&lt;/b&gt; normal
+                    &lt;br&gt;
+                    &lt;b&gt;suite:&lt;/b&gt; sample.timeout.SampleTest1
+                    &lt;br&gt;
+                    &lt;b&gt;testClass:&lt;/b&gt; sample.timeout.SampleTest1
+                    &lt;br&gt;
+                    &lt;b&gt;package:&lt;/b&gt; sample.timeout.SampleTest1
+                    &lt;br&gt;
+                    &lt;br&gt;
+                &lt;/p&gt;
+                &lt;!-- TABLE --&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;card border-secondary mb-3 border-danger&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;
+                testSomeLibraryMethod()
+                &lt;span class=&quot;badge badge-pill badge-danger&quot;&gt;failed&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;!-- CARD TEXT --&gt;
+                &lt;p class=&quot;card-text&quot;&gt;
+                    &lt;b&gt;description:&lt;/b&gt;
+                    &lt;br&gt;
+                    &lt;b&gt;duration:&lt;/b&gt; 0.052 s
+                    &lt;br&gt;
+                    &lt;b&gt;severity:&lt;/b&gt; normal
+                    &lt;br&gt;
+                    &lt;b&gt;suite:&lt;/b&gt; sample.timeout.SampleTest2
+                    &lt;br&gt;
+                    &lt;b&gt;testClass:&lt;/b&gt; sample.timeout.SampleTest2
+                    &lt;br&gt;
+                    &lt;b&gt;package:&lt;/b&gt; sample.timeout.SampleTest2
+                    &lt;br&gt;
+                    &lt;br&gt;
+                &lt;/p&gt;
+                &lt;!-- TABLE --&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
