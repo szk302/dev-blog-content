@@ -1,0 +1,38 @@
+---
+title: Debianにapt-keyを使用せずにサードパーティのリポジトリを登録しパッケージをインストールする
+date: 2022-10-22T08:50:00+09:00
+tags:
+    - Debian
+    - bullseye
+    - Chrome
+    - bullseye-slim
+---
+
+= Debianにapt-keyを使用せずにサードパーティのリポジトリを登録しパッケージをインストールする 
+
+Debianにリポジトリを登録してChromeを入れようとしたところ *apt-key* が廃止されることがわかった。 +
+代替方法を調査したのでメモ
+
+ひとまとめで管理していたリポジトリの鍵を個別で管理し、信用できないサードパーティのリポジトリの鍵は公式の鍵の場所ではなく別の場所で管理しろということらしい。
+
+== 方法
+
+. 鍵を一旦取り込みバイナリ形式でエクスポートする
+. リポジトリ指定時に使用する鍵を指定
+** 以下の用にリポジトリ指定を書き換えた 
+*** 修正前: `deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main`
+*** 修正後: `deb [arch=amd64 signed-by=/usr/local/share/keyrings/chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main`
+
+以下、bullseyeにChromeを入れたときの例
+
+.node:bullseye-slimにChromeをインストール
+[source,docker]
+----
+include::Dockerfile[]
+----
+
+== 参考
+
+* https://wiki.debian.org/DebianRepository/UseThirdParty[DebianRepository/UseThirdParty#Instructions to connect to a third-party repository]
+* https://gihyo.jp/admin/serial/01/ubuntu-recipe/0675[Ubuntu Weekly Recipe/第675回 apt-keyはなぜ廃止予定となったのか]
+* https://www.ubuntuupdates.org/ppa/google_chrome?dist=stable[UbuntuUpdates.org/3rd Party Repository: Google Chrome]
