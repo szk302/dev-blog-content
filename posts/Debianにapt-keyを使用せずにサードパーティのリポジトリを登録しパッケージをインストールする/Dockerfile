@@ -8,7 +8,7 @@ RUN apt update -y && \
 RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --no-default-keyring --keyring /tmp/temp-keyring.gpg --import && \
     # リポジトリキーをバイナリ形式でエクスポート
     gpg --no-default-keyring --keyring /tmp/temp-keyring.gpg --export --output /usr/local/share/keyrings/chrome.gpg && \
-    # リトじポリキーを指定してリポジトリを登録
+    # リポジトリキーを指定してリポジトリを登録
     sh -c 'echo "deb [arch=amd64 signed-by=/usr/local/share/keyrings/chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
     # インストール
     apt update -y && \

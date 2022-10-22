@@ -1,6 +1,7 @@
 ---
 title: Debianにapt-keyを使用せずにサードパーティのリポジトリを登録しパッケージをインストールする
 date: 2022-10-22T08:50:00+09:00
+draft: false
 tags:
     - Debian
     - bullseye
