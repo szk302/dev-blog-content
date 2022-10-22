@@ -1,0 +1,82 @@
+---
+title: PrerenderでSPAの画面を1枚のHTMLで保存する
+date: 2022-10-22T13:30:00+09:00
+draft: false
+tags:
+  - Prerender
+  - Chrome
+---
+
+= PrerenderでSPAの画面を1枚のHTMLで保存する
+
+SPAのようなJSで画面構築してレンダリングされた後のHTMLを取得したいので調査
+
+以下の条件で検討した。
+
+* ReactやVueなどJSフレームワークに依存しない
+
+== 方法
+
+最初はPuppeteerやPlaywrightを使用する方法を考えたが、調べていくうちに https://github.com/prerender/prerender[Prerender] という存在を知り使ってみた。
+
+PrerenderにはChromeが必要なため、インストールしたイメージを用意した。
+
+.ディレクトリ構造
+[source,bash]
+----
+.
+├── Dockerfile
+└── docker-compose.yml
+----
+
+サーバとして起動するだけなためEntrypointにJSを直接記述している。
+
+.Dockerfile
+[source, docker]
+----
+include::Dockerfile[]
+----
+
+.docker-compose.yml
+[source, yml]
+----
+include::docker-compose.yml[]
+----
+
+== 手順
+
+. 以下のコマンドで起動
+** `docker-compose up -d`
+. 取得したい画面のURLを *http://localhost:3000/render?url=* の後にパラメータとしてつなげてGET(ここではTODOMVCでやってみた)
+** `curl http://localhost:3000/render?url=https://todomvc.com/examples/react/#/`
+
+.`curl https://todomvc.com/examples/react/#/` 実行時の一部のNode
+[source,html]
+----
+	<section class="todoapp"></section>
+----
+
+.`curl http://localhost:3000/render?url=https://todomvc.com/examples/react/#/` 実行時の一部のNode
+[source,html]
+----
+	<section class="todoapp">
+		<div data-reactid=".0">
+			<header class="header" data-reactid=".0.0">
+				<h1 data-reactid=".0.0.0">todos</h1><input class="new-todo" placeholder="What needs to be done?"
+					value="" data-reactid=".0.0.1">
+			</header>
+		</div>
+	</section>
+----
+
+== 注意点
+
+オプションに *--no-sandbox* を渡しているのでセキュリティに注意する。未指定で実行する方法はわからなかった。
+
+== 参考
+
+* https://developer.chrome.com/docs/puppeteer/ssr/[Headless Chrome: an answer to server-side rendering JS sites]
+* https://github.com/prerender/prerender[Prerender]
+* https://github.com/prerender/prerender/issues/521[Failed to start and/or connect to Chrome. Please make sure Chrome is running]
+* https://hub.docker.com/_/node/tags[docker hub/Explore/Official Images/node]
+* https://todomvc.com/examples/react/#/[todomvc.com]
