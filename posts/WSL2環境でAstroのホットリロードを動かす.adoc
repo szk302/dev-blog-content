@@ -1,0 +1,37 @@
+---
+title: WSL2環境でAstroのホットリロードを動かす
+date: 2022-11-16T22:20:00+09:00
+draft: false
+tags:
+  - Astro
+---
+
+= WSL2環境でAstroのホットリロードを動かす
+
+Astro入門してみたが `npm run dev` して開発サーバ立ち上げてもいつものごとくホットリロードが効かないので調べた
+
+== 対応
+
+astro.config.mjsに *usePolling:true* を追加して解決
+
+[source,mjs]
+----
+import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+
+// https://astro.build/config
+export default defineConfig({
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+      },
+    },
+  },
+  integrations: [react()],
+});
+----
+
+== 参考
+
+* https://ja.vitejs.dev/config/server-options.html#server-watch[server.watch]
