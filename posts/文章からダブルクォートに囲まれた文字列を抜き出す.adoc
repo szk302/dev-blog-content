@@ -1,0 +1,63 @@
+---
+title: 文章からダブルクォートに囲まれた文字列を抜き出す
+date: 2022-11-17T19:40:00+09:00
+draft: false
+tags:
+  - 正規表現
+  - JavaScript
+  - 否定後読み
+  - Negative lookbehind
+---
+
+= 文章からダブルクォートに囲まれた文字列を抜き出す
+
+Jsで複数のダブルクォートに囲まれた文字列を抜き出したかったので調査
+
+== 方法
+
+否定後読みでエスケープされたダブルクォートを除外しつつ、囲まれた文字列を抜き出せた
+
+.連続した奇数個の\(エスケープ文字)が手前にない"(ダブルクォート)で囲まれた0文字以上の文字列
+[source,txt]
+----
+/(?<!(?<!\\)\\(?:\\\\)*(?!\\))".*?(?<!(?<!\\)\\(?:\\\\)*(?!\\))"/g
+----
+
+NOTE:: (?:)は後方参照を使用しない(キャプチャ)しないグループ化
+
+.ALBのログの""で囲まれた部分を抜き出す
+[source,js]
+----
+const regexp = /(?<!(?<!\\)\\(?:\\\\)*(?!\\))".*?(?<!(?<!\\)\\(?:\\\\)*(?!\\))"/g;
+const str = "h2 2018-07-02T22:23:00.186641Z app/my-loadbalancer/50dc6c495c0c9188 10.0.1.252:48160 10.0.0.66:9000 0.000 0.002 0.000 200 200 5 257 \"GET https://10.0.2.105:773/ HTTP/2.0\" \"curl/7.46.0\" ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 arn:aws:elasticloadbalancing:us-east-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067 \"Root=1-58337327-72bd00b0343d75b906739c42\" \"-\" \"-\" 1 2018-07-02T22:22:48.364000Z \"redirect\" \"https://example.com:80/\" \"-\" \"10.0.0.66:9000\" \"200\" \"-\" \"-\""
+Array.from(str.matchAll(regexp),m => m[0]).forEach((v)=>console.log(v))
+----
+
+.結果
+[source,console]
+----
+"GET https://10.0.2.105:773/ HTTP/2.0"
+"curl/7.46.0"
+"Root=1-58337327-72bd00b0343d75b906739c42"
+"-"
+"redirect"
+"https://example.com:80/"
+"-"
+"10.0.0.66:9000"
+"200"
+"-"
+----
+
+== 備考
+
+* 先読み(Lookahead)
+* 否定先読み(Negative lookahead)
+* 後読み(Lookbehind)
+* 否定後読み(Negative lookbehind)
+
+== 参考
+
+* https://www.javadrive.jp/regex-basic/writing/index2.html#section3[先読みと後読みを使ったパターン]
+* https://qiita.com/shimajiroxyz/items/84e0d934b1127cff0ab2[偶数回の繰り返しにのみマッチさせる正規表現【python】]
+* https://regex101.com/r/NRRC0P/1[regex101.com(?<!(?<!\\)\\(?:\\\\)*(?!\\))".*?(?<!(?<!\\)\\(?:\\\\)*(?!\\))"]
+
