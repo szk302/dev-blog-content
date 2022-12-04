@@ -1,0 +1,16 @@
+{
+  "name": "gen-openapi-from-json-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gen": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express-oas-generator": "^1.0.45",
+    "json-server": "^0.17.0",
+    "node-fetch": "^2.6.7"
+  }
+}

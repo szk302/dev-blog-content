@@ -1,0 +1,76 @@
+---
+title: json-serverからOpenAPISpecificationの一部を生成する
+date: 2022-12-04T11:27:00+09:00
+draft: false
+tags:
+  - OpenAPI
+  - OpenAPI Specification - Version 3.0
+  - json-server
+  - JSON Server
+  - express-oas-generator
+---
+
+= json-serverからOpenAPISpecificationの一部を生成する
+
+適当にJSON Serverで作成したMockからOpenAPIの定義を生成できないか試したのでメモ。 +
+結果としては一応生成できたが余分な値や足りない(クエリパラメータなど)部分がある。
+
+== ディレクトリ構成
+
+[source,txt]
+----
+./gen-openapi-from-json-server
+|-- db.json
+|-- package-lock.json
+|-- package.json
+`-- server.js
+----
+
+=== package.json
+
+express-oas-generatorを使用して生成している。ただしそのままではschemaやexamplesが生成されないため、 +
+localhostにリクエストしキャプチャして生成するために *node-fetch* を入れた。
+
+.package.json
+[source,json]
+----
+include::gen-openapi-from-json-server/package.json[]
+----
+
+=== db.json
+
+json-serverで使用しているdb.json
+
+.db.json
+[source,json]
+----
+include::/gen-openapi-from-json-server/db.json[]
+----
+
+== server.js
+
+今回適当に作成した生成スクリプト。 +
+express-oas-generatorを使用して生成しているが、pathしか生成されないのでキャプチャ機能を用いてdb.jsonの値をリクエストしてキャプチャしている。 +
+クエリパラメータも試しにリクエストしてみたが、キャプチャされないためコメントアウト。 +
+生成後はjson-serverは終了する。
+
+.server.js
+[source,js]
+----
+include::gen-openapi-from-json-server/server.js[]
+----
+
+== 結果
+
+.my-openapi_v3.json
+[source,json]
+----
+include::gen-openapi-from-json-server/my-openapi_v3.json[]
+----
+
+== 参考
+
+* https://github.com/typicode/json-server[github/typicode/json-server]
+* https://github.com/mpashkovskiy/express-oas-generator[github/mpashkovskiy/express-oas-generator]
+* https://github.com/node-fetch/node-fetch[github/node-fetch/node-fetch]
+* https://petstore3.swagger.io/[Swagger Petstore - OpenAPI 3.0]

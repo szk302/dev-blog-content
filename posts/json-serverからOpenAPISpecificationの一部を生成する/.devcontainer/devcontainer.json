@@ -1,0 +1,327 @@
+{
+  "name": "json-server-workspace",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "json-server-workspace",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    // ## VSCode設定
+    // タブサイズ
+    "editor.tabSize": 2,
+    // ### ブラケットペア
+    // ブラケットペアを強調表示
+    "editor.guides.bracketPairs": "active",
+    // ### インデントガイド
+    // アクティブなインデント ガイドを強調表示
+    "editor.guides.highlightActiveIndentation": true,
+    // ### コードヒント
+    // [Ctr]+[Alt] を押している間ヒントを表示
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    // 変数の型のヒント
+    "typescript.inlayHints.variableTypes.enabled": true,
+    // 引数の型のヒント
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    // クラスのプロパティの型のヒント
+    "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+    // パラメータの型のヒント
+    "typescript.inlayHints.parameterTypes.enabled": true,
+    // 戻り値の型のヒント
+    "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+    // 変数の型のヒント
+    "javascript.inlayHints.variableTypes.enabled": true,
+    // 引数の型のヒント
+    "javascript.inlayHints.parameterNames.enabled": "all",
+    // クラスのプロパティの型のヒント
+    "javascript.inlayHints.propertyDeclarationTypes.enabled": true,
+    // パラメータの型のヒント
+    "javascript.inlayHints.parameterTypes.enabled": true,
+    // 戻り値の型のヒント
+    "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+    // ### ペアのタグの自動編集
+    "editor.linkedEditing": true,
+    // ### プロセスの分離設定
+    "extensions.experimental.affinity": {
+      // vim
+      "vscodevim.vim": 1
+    },
+    "source.organizeImports": true,
+    // "editor.codeActionsOnSave": {
+    // },
+    "editor.formatOnSave": true,
+    // ### 言語別
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "files.trimTrailingWhitespace": false
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[less]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[graphql]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[yaml]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[sql]": {
+      "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+    },
+    "[shellscript]": {
+      "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[powershell]": {
+      "editor.defaultFormatter": "ms-vscode.PowerShell"
+    },
+    // ****************************
+    // *      保存時の自動整形系
+    // ****************************
+    // # 末尾のスペースの削除
+    "files.trimTrailingWhitespace": true,
+    // ## マークダウンファイルは末尾のスペース削除をOFF
+    // **************************************
+    // *      コンフリクトによる調整
+    // **************************************
+    // ファイルによってインデントサイズを変えるをOFF
+    "editor.detectIndentation": false,
+    // **************************************
+    // *      拡張設定
+    // **************************************
+    // 「数式」は Markdown Preview Enhanced と競合するのため無効化
+    "markdown.extension.math.enabled": false,
+    // 番号付きリストの「自動番号振り直し」と「リスト追加時に連番を使う」は無効化
+    // "markdown.extension.orderedList.autoRenumber": false,
+    // "markdown.extension.orderedList.marker": "one",
+    // インデント幅は VS Code の設定を継承する
+    "markdown.extension.list.indentationSize": "inherit",
+    // 画像パスを絶対パスに変換するのを無効化
+    "markdown.extension.print.absoluteImgPath": false,
+    // エディター上の装飾を無効化 (~~取り消し線~~ や `インライン コード` など)
+    "markdown.extension.syntax.decorations": false,
+    // テーブル フォーマッターを無効化
+    "markdown.extension.tableFormatter.enabled": false
+  },
+  "extensions": [
+    // ## **全体**
+    // ### 日本語化パック
+    "MS-CEINTL.vscode-language-pack-ja",
+    // ### iconの拡張
+    "vscode-icons-team.vscode-icons",
+    "EditorConfig.EditorConfig",
+    // ### Prettier - Code formatter
+    "esbenp.prettier-vscode",
+    // ### IntelliCode
+    // URL: https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode
+    "VisualStudioExptTeam.vscodeintellicode",
+    // ### GitHub Copilot
+    // URL: https://marketplace.visualstudio.com/items?itemName=GitHub.copilot
+    // 説明: OpenAI Codex を使用したコード提案
+    // "GitHub.copilot",
+    // ### Tabnine AI Autocomplete for Javascript, Python, Typescript, PHP, Go, Java, Ruby & more
+    // URL:https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode
+    // 説明: AI コード補完でコーディングを高速化
+    // "TabNine.tabnine-vscode",
+    // ### Ponicode
+    // URL: https://marketplace.visualstudio.com/items?itemName=ponicode.ponicode
+    // 説明: 単体テストを生成するAI を利用した拡張パック
+    // "ponicode.ponicode",
+    // ## 便利ツール
+    // ### Live Server
+    // URL: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+    // 説明: 簡易HTTPサーバ
+    "ritwickdey.LiveServer",
+    // ### REST Client
+    // URL: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+    // 説明: HTTP RESTクライアント
+    "humao.rest-client",
+    // ### Bookmarks
+    // URL: https://marketplace.visualstudio.com/items?itemName=alefragnani.Bookmarks
+    // 説明: ソースコードのブックマーク
+    "alefragnani.Bookmarks",
+    // ### Tailwind CSS IntelliSense
+    // URL: https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+    // 説明: Tailwindサポート
+    "bradlc.vscode-tailwindcss",
+    // ### Code Spell Checker
+    // URL: https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker
+    // 説明: スペル チェッカー、タイポを減らせる
+    "streetsidesoftware.code-spell-checker",
+    // ### Bookmarks
+    // URL: https://marketplace.visualstudio.com/items?itemName=alefragnani.Bookmarks
+    // 説明: ソースコードのブックマーク
+    "alefragnani.Bookmarks",
+    // ### Todo Tree
+    // URL: https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree
+    // 説明: TODOコメントを見やすくする
+    "Gruntfuggly.todo-tree",
+    // ## **Markdown系**
+    // ### Markdown All in One
+    // URL: https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+    // 説明: マークダウンサポート
+    "yzhang.markdown-all-in-one",
+    // ### Markdown Preview Enhanced
+    // URL: https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced
+    // 説明: マークダウンプレビュー(VSCode標準より豊富な機能)
+    "shd101wyy.markdown-preview-enhanced",
+    // ### markdownlint
+    // URL: https://marketplace.visualstudio.com/items?itemName=markdownlint
+    // 説明: マークダウンのリンター
+    "DavidAnson.vscode-markdownlint",
+    // ### Excel to Markdown table
+    // URL: https://marketplace.visualstudio.com/items?itemName=csholmq.excel-to-markdown-table
+    // 説明: ExcelからMarkdown形式のTableに変換
+    "csholmq.excel-to-markdown-table",
+    // ## **CSV系**
+    // ### Rainbow CSV
+    // URL: https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv
+    // 説明: CSVを見やすく
+    "mechatroner.rainbow-csv",
+    // ### Edit csv
+    // URL: https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv
+    // 説明: CSVが編集しやすくなる
+    "janisdd.vscode-edit-csv",
+    // ### SandDance for VSCode
+    // URL: https://marketplace.visualstudio.com/items?itemName=msrvida.vscode-sanddance
+    // 説明: CSVデータ解析
+    "msrvida.vscode-sanddance",
+    // ## **JS/TS**
+    // ### ESLint
+    // URL: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+    // 説明: JS/TSのリンター
+    "dbaeumer.vscode-eslint",
+    // ## **OpenAPI/Swagger**
+    // ### Swagger Viewer
+    // URL: https://marketplace.visualstudio.com/items?itemName=Arjun.swagger-viewer
+    "Arjun.swagger-viewer",
+    // 説明: Swaggerのサポート
+    // ### OpenAPI (Swagger) Editor
+    // URL: https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi
+    // 説明: OpenAPIのサポート
+    "42Crunch.vscode-openapi",
+    // ### openapi-lint
+    // URL: https://marketplace.visualstudio.com/items?itemName=mermade.openapi-lint
+    // 説明: openapi-lintのリンター
+    "mermade.openapi-lint",
+    // ## **その他**
+    // ### Draw.io Integration
+    // URL: https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio
+    // 説明: Draw.ioと統合
+    "hediet.vscode-drawio",
+    // ### hadolint
+    // URL: https://marketplace.visualstudio.com/items?itemName=exiasr.hadolint
+    // 説明: Dockerのリンター
+    "exiasr.hadolint",
+    // ### Output Colorizer
+    // URL: https://marketplace.visualstudio.com/items?itemName=IBM.output-colorizer
+    // 説明: コンソールの出力結果を色付け
+    "IBM.output-colorizer",
+    // ### Better Comments
+    // URL: https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments
+    // 説明: コメントのサポート
+    "aaron-bond.better-comments",
+    // ### SQL Formatter
+    // URL: https://marketplace.visualstudio.com/items?itemName=adpyke.vscode-sql-formatter
+    // 説明: SQLフォーマッタ
+    "adpyke.vscode-sql-formatter",
+    // ### shell-format
+    // URL: https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format
+    // 説明: Shellフォーマッタ
+    "foxundermoon.shell-format",
+    // ### YAML
+    // URL: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
+    // 説明: YAMLのサポート
+    // 備考: フォーマットは[esbenp.prettier-vscode]で行う
+    "redhat.vscode-yaml",
+    // ### AsciiDoc
+    // URL: https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode
+    // 説明: AsciiDocのサポート
+    "asciidoctor.asciidoctor-vscode",
+    // ### DotENV
+    // URL: https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv
+    // 説明: .envのサポート
+    "mikestead.dotenv",
+    // ### PowerShell
+    // URL: https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
+    // 説明: PowerShellのサポート
+    "ms-vscode.PowerShell",
+    // ## **拡張パック**
+    // ### Git Extension Pack
+    // URL: https://marketplace.visualstudio.com/items?itemName=donjayamanne.git-extension-pack
+    // 説明: Gitの拡張パック
+    //     * Git History
+    //     * Project Manager
+    //     * GitLens
+    //     * gitignore
+    //     * Open in GitHub, Bitbucket, Gitlab, VisualStudio.com !
+    "donjayamanne.git-extension-pack",
+    // ### Remote Development
+    // URL: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
+    // 説明: リモート接続系の拡張パック
+    //     * Remote - SSH
+    //     * Remote - Containers
+    //     * Remote - WSL
+    "ms-vscode-remote.vscode-remote-extensionpack"
+    // ## **不要になった拡張たち**
+    // ### npm
+    // URL: https://marketplace.visualstudio.com/items?itemName=eg2.vscode-npm-script
+    // 説明: npm スクリプトの実行をサポート
+    // "eg2.vscode-npm-script",
+    // ### [Deprecated] Debugger for Chrome
+    // URL: https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
+    // 説明: Google Chrome で実行されている JavaScript コードを VS Code からデバッグ
+    // "msjsdiag.debugger-for-chrome",
+    // ### [Deprecated] Bracket Pair Colorizer 2
+    // URL: https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2
+    // 説明: 対応するブラケットを色で識別
+    // "CoenraadS.bracket-pair-colorizer-2",
+    // VSCode設定: High performance bracket pair colorization
+    //    * editor.bracketPairColorization.enabled
+    // ### indent-rainbow
+    // URL: https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow
+    // 説明: インデントを読みやすくする
+    // VSCode設定: Indentation guides settings
+    //    * editor.guides.highlightActiveIndentation
+    //    * editor.guides.bracketPairsHorizontal
+    // ### zenkaku
+    // URL: https://marketplace.visualstudio.com/items?itemName=mosapride.zenkaku
+    // 説明: 全角空白を表示
+    // "mosapride.zenkaku",
+    // VSCode設定: Unicode highlighting
+    //     * editor.unicodeHighlight.invisibleCharacters
+    //     * editor.unicodeHighlight.ambiguousCharacters
+    //     * editor.unicodeHighlight.nonBasicASCII
+    //     * editor.unicodeHighlight.allowedCharacters
+    //     * editor.unicodeHighlight.includeComments
+    // ## **Template**
+    // ###
+    // URL:
+    // 説明:
+    // 備考:
+    //
+  ],
+  "shutdownAction": "stopCompose"
+}

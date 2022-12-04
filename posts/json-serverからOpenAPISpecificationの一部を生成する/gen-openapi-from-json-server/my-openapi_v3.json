@@ -1,0 +1,466 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "workspace",
+    "version": "1.0.0",
+    "license": { "name": "ISC" },
+    "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3)."
+  },
+  "paths": {
+    "/pet": {
+      "get": {
+        "summary": "/pet",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "number" },
+                      "name": { "type": "string" },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" }
+                        }
+                      },
+                      "photoUrls": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "number" },
+                            "name": { "type": "string" }
+                          }
+                        }
+                      },
+                      "status": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      },
+      "post": {
+        "summary": "/pet",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "name": { "type": "string", "example": "doggie" },
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "example": 1 },
+                        "name": { "type": "string", "example": "Dogs" }
+                      }
+                    },
+                    "photoUrls": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["string"]
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" }
+                        }
+                      },
+                      "example": [{ "id": 0, "name": "string" }]
+                    },
+                    "status": { "type": "string", "example": "available" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      }
+    },
+    "/pet/{id}": {
+      "get": {
+        "summary": "/pet/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "name": { "type": "string", "example": "doggie" },
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "example": 1 },
+                        "name": { "type": "string", "example": "Dogs" }
+                      }
+                    },
+                    "photoUrls": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["string"]
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" }
+                        }
+                      },
+                      "example": [{ "id": 0, "name": "string" }]
+                    },
+                    "status": { "type": "string", "example": "available" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      },
+      "put": {
+        "summary": "/pet/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "name": { "type": "string", "example": "doggie" },
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "example": 1 },
+                        "name": { "type": "string", "example": "Dogs" }
+                      }
+                    },
+                    "photoUrls": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["string"]
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" }
+                        }
+                      },
+                      "example": [{ "id": 0, "name": "string" }]
+                    },
+                    "status": { "type": "string", "example": "available" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      },
+      "patch": {
+        "summary": "/pet/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "name": { "type": "string", "example": "doggie" },
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "example": 1 },
+                        "name": { "type": "string", "example": "Dogs" }
+                      }
+                    },
+                    "photoUrls": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["string"]
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" }
+                        }
+                      },
+                      "example": [{ "id": 0, "name": "string" }]
+                    },
+                    "status": { "type": "string", "example": "available" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      },
+      "delete": {
+        "summary": "/pet/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        },
+        "tags": ["pet"]
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "/user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "number" },
+                      "username": { "type": "string" },
+                      "firstName": { "type": "string" },
+                      "lastName": { "type": "string" },
+                      "email": { "type": "string" },
+                      "password": { "type": "string" },
+                      "phone": { "type": "string" },
+                      "userStatus": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "post": {
+        "summary": "/user",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "username": { "type": "string", "example": "theUser" },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "James" },
+                    "email": { "type": "string", "example": "john@email.com" },
+                    "password": { "type": "string", "example": "******" },
+                    "phone": { "type": "string", "example": "12345" },
+                    "userStatus": { "type": "number", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "/user/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "username": { "type": "string", "example": "theUser" },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "James" },
+                    "email": { "type": "string", "example": "john@email.com" },
+                    "password": { "type": "string", "example": "******" },
+                    "phone": { "type": "string", "example": "12345" },
+                    "userStatus": { "type": "number", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "put": {
+        "summary": "/user/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "username": { "type": "string", "example": "theUser" },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "James" },
+                    "email": { "type": "string", "example": "john@email.com" },
+                    "password": { "type": "string", "example": "******" },
+                    "phone": { "type": "string", "example": "12345" },
+                    "userStatus": { "type": "number", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "patch": {
+        "summary": "/user/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 10 },
+                    "username": { "type": "string", "example": "theUser" },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "James" },
+                    "email": { "type": "string", "example": "john@email.com" },
+                    "password": { "type": "string", "example": "******" },
+                    "phone": { "type": "string", "example": "12345" },
+                    "userStatus": { "type": "number", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "delete": {
+        "summary": "/user/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      }
+    }
+  },
+  "tags": [{ "name": "pet" }, { "name": "user" }]
+}
