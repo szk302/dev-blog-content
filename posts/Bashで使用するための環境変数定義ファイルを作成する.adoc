@@ -1,0 +1,27 @@
+---
+title: Bashで使用するための環境変数定義ファイルを作成する
+date: 2022-12-11T08:12:00+09:00
+draft: false
+tags:
+  - Bash
+  - declare
+---
+
+= Bashで使用するための環境変数定義ファイルを作成する
+
+CRON実行時に環境変数が読み込まれず困ったのでメモ
+
+== 対応
+
+declareコマンドを使用して環境変数定義を書き出し、CRON実行時のシェルスクリプトで読み込むようにした。
+
+[source,bash]
+----
+declare -px > /root/env.sh
+----
+
+NOTE: 当初はenvを書き出したが、スペース入りの環境変数が定義されていた場合読み込み時にエラーになったので上記の方法に変更した。
+
+== 参考
+
+* https://unix.stackexchange.com/questions/697106/how-to-add-double-quotes-to-every-value-in-env-file[How to add double quotes to every value in env file]
