@@ -1,0 +1,48 @@
+---
+title: WSL2の動作不良を解消するメモ
+date: 2023-01-01T17:04:00+09:00
+draft: false
+tags:
+  - Windows 11 Pro
+  - 22H2
+  - WSL2
+---
+
+= WSL2の動作不良を解消するメモ
+
+今使用しているPCが古くなったため、年末にPCを新調した。  
+今のWindows 10 WSL2環境がよく動いて使いやすいため、次もWindows機を購入した。
+しかしWSL2をインストールしたところ動きが不調になった。  
+
+現象としては以下の通り。エラーログは取り忘れた。。。
+
+* Astroの開発モード `npm run start` がやたら遅い
+* 起動し終わり、localhostでアクセスしてもしばらく待たされる。
+* node_modulesを全部消して `npm i` したところローカルファイル取得のエラーが発生する。
+** ただし、手動でcatやviewをしても見れるエラーとなるファイルは表示できる
+** 削除して入れ直してもだめ
+
+== 対応
+
+以下の対応を行い今のところ不具合は解消した。
+
+1. OSを工場出荷状態に戻す
+2. Windows 11 Homeの状態でWindowsUpdateを利用し22H2までバージョンアップ
+** バンドルされているOSがWindows 11 Homeなため
+3. WSL2を旧来の方法でインストール
+** https://learn.microsoft.com/ja-jp/windows/wsl/install-manual[以前のバージョンの WSL の手動インストール手順]
+4. Docker Desktopをインストール
+5. Windows 11 Proにアップグレード
+6. ESETのFirewall設定でWSLからの通信(53のtcp/udp)を許可
+
+== メモ
+
+不具合が発生していたwslコマンドと対応後のwslコマンドで差がでている。
+
+* versionオプションがない
+** `wsl --version` を実行すると怒られる
+* WSL2で `ps aux` したときに9pがいない。
+** ただし `df -T` すると `/mnt/c` は 9pになっている
+*** `drvfs          9p      975827268 99710596 876116672  11% /mnt/c`
+** エクスプローラのLinuxからは *\\wsl$Linuxディストリビューション* でアクセスできる
+
