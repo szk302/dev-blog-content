@@ -25,18 +25,18 @@ RDP接続でつなげるPCを配置することにした。 +
 1. ローカルセキュリティポリシーでロックアウトのしきい値設定
 ** セキュリティの設定 -> アカウントロックアウトのポリシー -> アカウントのロックアウトのしきい値
 +
-image::D5S5iNIxQ1.png[]
+image::accountlock.png[]
 2. ロックアウト時の監査ログの設定
 ** セキュリティの設定 -> ローカルポリシー -> 監査ポリシー -> アカウント管理の監査
 +
-image::mstsc_ivbeUoTUpm.png[]
+image::localsecurity.png[]
 
 === Administratorユーザのリモートログイン拒否
 
 1. ローカルグループポリシーでAdministratorユーザのリモートログイン拒否設定
 ** ローカルコンピュータポリシー -> コンピュータの構成 -> Windowsの設定 -> セキュリティ設定 -> ローカルポリシー -> ユーザー権利の割り当て
 +
-image::mstsc_18dhBxv9QE.png[]
+image::localgroup.png[]
 
 NOTE:: ロックアウトのイベントIDは4740
 
