@@ -1,0 +1,72 @@
+---
+title: ESETでFirewall設定
+date: 2023-01-08T04:53:00+09:00
+draft: false
+tags:
+  - ESET
+  - ESET Internet Security
+---
+
+= ESETでFirewall設定
+
+== Firewallで何が弾かれているかの確認
+
+1. ESETの画面から[設定] -> [ネットワーク保護]
+
++
+
+image::egui_LuIDKmjnlc.png[]
+
+2. ネットワーク保護の画面で[最近ブロックさたアプリケーションまたはデバイス]
+
++
+
+image::egui_MIWTQC9zDv.png[]
+
+== Firewallルールの追加
+
+1. [設定] -> [詳細設定]
++
+image::egui_llrPuyfw6J.png[]
+2. 詳細設定の[ネットワーク保護]
++
+image::egui_ltn5NlILfX.png[]
+3. [ファイアウォール] -> [編集]
++
+image::egui_1GADRzOH1p.png[]
+4. ファイアウォールルールの[追加]
++
+image::egui_CKdPrco5lL.png[]
+
+== Firewallルールの追加(インターフェース別に設定)
+
+ざっと以下の手順になる。
+
+1. インターフェースに適用するプロファイル作成
+2. プロファイルにルールを追加
+3. インターフェースにプロファイル適用
+
+=== 1. インターフェースに適用するプロファイル作成
+
+1. [設定] -> [詳細設定]
++
+image::egui_llrPuyfw6J.png[]
+2. 詳細設定の[ネットワーク保護]
++
+image::egui_ltn5NlILfX.png[]
+3. ネットワーク保護の[ファイアウォール] -> ファイアウォールプロファイル[+]を開く
++
+image::egui_8DrVDnpxs5.png[]
+4. プロファイルのリストの[編集]でファイアウォールプロファイルを開き追加
++
+image::egui_Wr3B0fk1Mn.png[]
+
+=== 2. プロファイルにルールを追加 
+
+**Firewallルールの追加** の手順と同じ。ルール追加時に対象のプロファイルを選択する。
+
+=== 3. インターフェースにプロファイル適用
+
+1. ネットワークアダプタに割り当てられたプロファイルの[編集]でインターフェースにプロファイルを設定
++
+image::egui_DEi2Lk0pNt.png[]
