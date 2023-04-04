@@ -4,6 +4,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    branches: [ main ]
 jobs:
   build_dev_blog:
     uses: "szk302/dev-blog-builder/.github/workflows/build.yml@main"
