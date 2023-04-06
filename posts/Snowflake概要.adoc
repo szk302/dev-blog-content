@@ -1,0 +1,37 @@
+---
+title: Snowflake概要
+date: 2023-04-06T16:20:00+09:00
+draft: false
+tags:
+  - Snowflake
+---
+
+= Snowflake概要
+
+Snowflakeについて調べたのでメモ
+
+* データ分析用のサービスだが、データ自体の売買もできそう。
+* 複数のデータプールからコネコネして欲しい情報をViewとして表示したりグラフにしたりできる。
+* データ自体をマーケットプレースから取得し自分のワークシート?に配置できる(マーケットプレースだから売り買いできる？)
+* 400ドル分の30日間無料トライアルでお試し可能
+** デモ動画では天気データを取得していた
+** 購入した天気データは販売元が更新すると自分の所にあるデータも更新されるそうな
+* クエリ用のマシンとワークシート(データプール)?は区別して管理される
+* マシンは使用後、自動停止で余分な課金がされない
+* デモではSQL内でインスタンスサイズを変更していた。ステップ実行もしていた。
+** ロードするデータが多い場合一時的にインスタンスサイズ変更して一気にファイル読み込んでいた
+* AWS,GCP,Azureのいずれかにホストされる(選べる)
+** それぞれ一部に機能制限があるっぽい
+* ロードするデータはSnowflake内か各オブジェクトストレージ(S3,GCS,Azure Blob Storage)
+* SQLはSnowflake用に拡張されたもの
+** https://docs.snowflake.com/ja/user-guide/intro-supported-features#standard-and-extended-sql-support[Snowflake ドキュメント/主な機能の概要#標準および拡張 SQL サポート¶]
+** https://docs.snowflake.com/ja/sql-reference-commands[Snowflake ドキュメント/SQL コマンドリファレンス]
+
+== チュートリアル
+
+* https://docs.snowflake.com/ja/user-guide/getting-started-tutorial[Snowflake ドキュメント/Snowflakeを20分で紹介]
+
+== 参考
+
+* https://signup.snowflake.com/?_l=ja[30日間の無料トライアルを開始する]
+* https://docs.snowflake.com/ja[Snowflake ドキュメント]
