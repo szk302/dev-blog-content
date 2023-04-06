@@ -1,0 +1,48 @@
+---
+title: Snowflakeチュートリアル_20分で紹介
+date: 2023-04-07T08:09:00+09:00
+draft: false
+tags:
+  - Snowflake
+---
+
+= Snowflakeチュートリアル_20分で紹介
+
+https://docs.snowflake.com/ja/learn-tutorials[Snowflake/チュートリアル/Snowflakeを20分で紹介]を実施したのでメモ
+
+== 事前準備
+
+以下のコマンドでサンプルデータを `/tmp` に展開しておくこと
+
+[source,bash]
+----
+curl -OL https://docs.snowflake.com/ja/_downloads/34f4a66f56d00340f8f7a92acaccd977/getting-started.zip
+unzip getting-started.zip -d /tmp
+----
+
+== 内容
+
+内容は以下の通り
+
+. CLIでSnowSQLにログイン
+** ログイン時のコマンドに使用するSnowflakeアカウント識別子(アカウント登録した際のメールにあるログイン用アドレスの先頭文字列)
+*** https://xxxxxxx-yy12345.snowflakecomputing.com/console/login の *xxxxxxx-yy12345*
+*** `snowsql -a xxxxxxx-yy12345 -u 登録したユーザID`
+. データベース,テーブル仮想ウェアハウスを作成
+** 仮想ウェアハウス作成時に `AUTO_RESUME = true` でウェアハウスの自動起動を指定している
+. ローカルにあるサンプルデータを内部ステージにインポート
+** 内部ステージのほかに外部ステージ(オブジェクトストレージ)が使えるそうな
+. 内部ステージからターゲットテーブルにコピー
+. クエリ,行挿入を実施
+. クリーンアップ
+
+以下のDockerfileを使用した。
+
+[source,docker]
+----
+include::Dockerfile[]
+----
+
+== 参考
+
+* https://docs.snowflake.com/ja/learn-tutorials[Snowflake/チュートリアル]
