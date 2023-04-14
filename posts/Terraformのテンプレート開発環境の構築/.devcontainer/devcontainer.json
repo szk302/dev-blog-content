@@ -1,0 +1,24 @@
+{
+    "name": "Terraform Development",
+    "dockerComposeFile": [
+        "./docker-compose.yml"
+    ],
+    "service": "terraform",
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "[terraform]": {
+            "editor.formatOnSave": true,
+            "editor.defaultFormatter": "hashicorp.terraform"
+        },
+    },
+    // .terraform-versionのファイルのterraformのインストール
+    "postStartCommand": "tfenv install",
+    "extensions": [
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "streetsidesoftware.code-spell-checker",
+        "shd101wyy.markdown-preview-enhanced",
+        "HashiCorp.terraform",
+        "tfsec.tfsec"
+    ]
+}

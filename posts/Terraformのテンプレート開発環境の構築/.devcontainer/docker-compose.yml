@@ -1,0 +1,8 @@
+version: '3'
+services:
+  terraform:
+    build:
+      context: .
+    volumes:
+      - ../:/workspace
+    tty: true
