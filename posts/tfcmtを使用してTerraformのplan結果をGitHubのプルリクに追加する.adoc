@@ -1,0 +1,67 @@
+---
+title: tfcmtを使用してTerraformのplan結果をGitHubのプルリクに追加する
+date: 2023-05-09T08:30:00+09:00
+draft: false
+tags:
+  - Terraform
+  - terraform plan
+  - tfcmt
+  - GitHub
+  - GitHub Actions
+---
+
+= tfcmtを使用してTerraformのplan結果をGitHubのプルリクに追加する
+
+tfcmtを使用する
+
+== 方法
+
+tfcmtをインストールして-patchオプション(既存のコメントを上書きする)を指定して実行
+
+.terraform-plan.ymlの一部
+[source,yml]
+----
+~
+      # tfcmtのインストール
+      - run: |
+          sudo curl -fL -o tfcmt.tar.gz https://github.com/suzuki-shunsuke/tfcmt/releases/download/${{ env.TFCMT_VERSION }}/tfcmt_linux_amd64.tar.gz
+          sudo tar -C /usr/bin -xzf ./tfcmt.tar.gz
+      # TerraformのPlanをプルリクに表示
+      - run: tfcmt plan -patch -- terraform show -no-color ${{ env.TF_PLAN_FILE_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+~
+----
+
+== エラー
+
+permissionsを設定していたところ以下のようなエラーが発生した。
+
+[source,bash]
+----
+For more help on using this command, run:
+  terraform show -help
+time="2023-05-02T11:33:36Z" level=error msg="remove labels" error="GET https://api.github.com/repos/szk302/sample/issues/1/labels?per_page=100: 403 Resource not accessible by integration []" program=tfcmt
+POST https://api.github.com/repos/szk302/sample/issues/1/comments: 403 Resource not accessible by integration []
+----
+
+issuesにpostしているようなので権限を追加
+
+[source,yml]
+----
+permissions:
+  contents: read
+  # tfcmtがプルリクとissuesに書き込みを行うための許可
+  pull-requests: write
+  issues: write
+----
+
+== 参考
+
+* https://zenn.dev/shunsuke_suzuki/articles/improve-terraform-cicd-with-tfcmt[tfcmt で Terraform の CI/CD を改善する]
+* https://github.com/suzuki-shunsuke/tfcmt[suzuki-shunsuke/tfcmt]
+* https://suzuki-shunsuke.github.io/tfcmt/usage[tfcmt/Command Usage]
+* https://github.com/suzuki-shunsuke/tfcmt/issues/316[suzuki-shunsuke/tfcmt/issues/316/Support for Terraform Planfiles #316]
+* https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs[GitHub Actions/Using jobs/Assigning permissions to jobs]
+* https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#contents[REST API/Overview/Permissions required for GitHub Apps]
+
